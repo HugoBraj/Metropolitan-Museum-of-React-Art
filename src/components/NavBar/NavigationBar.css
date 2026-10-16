@@ -1,0 +1,17 @@
+.navigation-bar {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px rgb(145, 145, 145) solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+button {
+    height: 100%;
+}
+
+.logo-img {
+    height: 40px;
+    margin: 5px;
+}
