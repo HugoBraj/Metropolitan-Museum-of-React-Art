@@ -25,9 +25,10 @@ pnpm dev      # Start the development server
 pnpm build    # Type-check and create a production build
 pnpm preview  # Preview the production build
 pnpm lint     # Run ESLint
+pnpm test     # Run the Vitest suite
 ```
 
-There is no `pnpm test` script or configured test suite yet.
+The current test suite contains smoke tests for the home and not-found routes.
 
 ## Current structure
 
@@ -37,7 +38,7 @@ There is no `pnpm test` script or configured test suite yet.
 - `src/pages/HomePage` is the home page placeholder.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
-- `src/api`, `src/hooks`, and `src/test` do not contain implementations yet.
+- `src/api` and `src/hooks` do not contain implementations yet; `src/test` contains application route smoke tests.
 
 ## Planned features
 
