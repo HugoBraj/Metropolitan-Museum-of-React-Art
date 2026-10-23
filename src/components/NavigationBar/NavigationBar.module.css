@@ -1,0 +1,35 @@
+.navigationBar {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-inline: 1rem;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logoImage {
+  display: block;
+  width: auto;
+  height: 2.5rem;
+}
+
+.collectionLink {
+  display: inline-flex;
+  min-height: 3.5rem;
+  align-items: center;
+  border-bottom: 3px solid var(--color-primary);
+  color: var(--color-primary);
+  padding-inline: 0.625rem;
+  text-decoration: none;
+}
+
+.collectionLink:hover,
+.collectionLink:focus-visible {
+  background-color: var(--color-primary);
+  color: #fff;
+}

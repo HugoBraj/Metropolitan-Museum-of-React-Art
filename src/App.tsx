@@ -1,14 +1,17 @@
-import './App.css'
-import { NavigationBar } from './components/NavBar/NavigationBar'
-import { Home } from './pages/Home'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { AppLayout } from './components/AppLayout/AppLayout'
+import { HomePage } from './pages/HomePage/HomePage'
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 
-function App() {
+export function App() {
   return (
-    <>
-      <NavigationBar />
-      <Home />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App
