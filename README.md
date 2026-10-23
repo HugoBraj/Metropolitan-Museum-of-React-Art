@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The current test suite contains smoke tests for the home and not-found routes.
+The test suite covers the home and not-found routes and the Met API client boundary.
 
 ## Current structure
 
@@ -38,7 +38,8 @@ The current test suite contains smoke tests for the home and not-found routes.
 - `src/pages/HomePage` is the home page placeholder.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
-- `src/api` and `src/hooks` do not contain implementations yet; `src/test` contains application route smoke tests.
+- `src/api/metMuseumClient.ts` provides typed search and object-detail requests; React Query hooks are not implemented yet.
+- `src/test` contains route smoke tests and API client tests.
 
 ## Planned features
 
@@ -47,7 +48,7 @@ The current test suite contains smoke tests for the home and not-found routes.
 - Browse paginated object lists and view object details.
 - Add a chart based on a bounded sample of returned collection objects.
 
-The API returns object IDs for searches; object records must be fetched separately and requests should remain bounded. Use the paginated `/public/collection/v1.1/search` endpoint rather than the deprecated `/v1/search` endpoint. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
+The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. React Query hooks and collection UI are not implemented yet. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
 
 ## Architecture and conventions
 
