@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The project currently contains the routed application shell, a home page placeholder, shared navigation, and a not-found page. Collection browsing, object details, search, and charts are planned but are not implemented yet.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The project currently contains a routed application shell with home, collection, search, artwork, and not-found pages. The collection, search, and artwork pages are placeholders; API-backed browsing and charts are planned.
 
 ## Requirements
 
@@ -34,8 +34,9 @@ The test suite covers the home and not-found routes, the Met API client, and its
 
 - `src/App.tsx` defines the routes and router.
 - `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`.
-- `src/components/NavigationBar` contains the current collection navigation link.
-- `src/pages/HomePage` is the home page placeholder.
+- `src/components/NavigationBar` contains responsive navigation, a mobile side panel, and a search form that routes to the search placeholder.
+- `src/components/RoutePlaceholder` renders the simple placeholder pages.
+- `src/pages/HomePage`, `src/pages/CollectionPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` define the current page routes.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search and object-detail requests.
@@ -44,7 +45,7 @@ The test suite covers the home and not-found routes, the Met API client, and its
 
 ## Planned features
 
-- Search the collection through The Met Open Access API, with suggestions in the navigation.
+- Connect search submission to the Met API and add dynamic artwork suggestions in the navigation.
 - Select a continent on the home page to browse related collection objects.
 - Browse paginated object lists and view object details.
 - Add a chart based on a bounded sample of returned collection objects.
