@@ -14,7 +14,7 @@ describe('application routes', () => {
   it('renders the home page and main navigation', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Home page' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Art from around the world' })).toBeTruthy()
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeTruthy()
   })
 

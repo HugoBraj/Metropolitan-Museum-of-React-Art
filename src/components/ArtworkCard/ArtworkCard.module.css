@@ -1,0 +1,55 @@
+.artworkCard {
+  min-width: 0;
+}
+
+.artworkLink {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.artworkFigure {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  margin: 0;
+}
+
+.artworkImage,
+.imageFallback {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: #efede7;
+  object-fit: cover;
+}
+
+.imageFallback {
+  display: grid;
+  place-items: center;
+  color: #5b5954;
+  font-size: 0.875rem;
+}
+
+.artworkCaption {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: 0.6rem;
+}
+
+.artworkTitle {
+  font-weight: 600;
+}
+
+.artworkArtist,
+.artworkDate {
+  color: #5b5954;
+  font-size: 0.875rem;
+}
+
+.artworkLink:hover .artworkTitle,
+.artworkLink:focus-visible .artworkTitle {
+  color: var(--color-primary);
+  text-decoration: underline;
+}

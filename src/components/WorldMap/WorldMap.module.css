@@ -1,0 +1,30 @@
+.worldMap {
+  display: block;
+  width: 100%;
+  max-height: 38rem;
+  overflow: visible;
+}
+
+.worldMap :global(path[data-region]) {
+  cursor: pointer;
+  fill: #d8d5cd;
+  stroke: #fff;
+  stroke-width: 1.5;
+  transition: fill 150ms ease, stroke 150ms ease;
+}
+
+.worldMap :global(path[data-region]:hover) {
+  fill: var(--color-primary);
+}
+
+.worldMap :global(path[data-region]:focus-visible) {
+  fill: var(--color-primary);
+  stroke: var(--color-text);
+  stroke-width: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .worldMap :global(path[data-region]) {
+    transition: none;
+  }
+}
