@@ -5,6 +5,7 @@ import { ArtworkPage } from './pages/ArtworkPage/ArtworkPage'
 import { CollectionPage } from './pages/CollectionPage/CollectionPage'
 import { HomePage } from './pages/HomePage/HomePage'
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
+import { RegionCollectionPage } from './pages/RegionCollectionPage/RegionCollectionPage'
 import { SearchPage } from './pages/SearchPage/SearchPage'
 
 const queryClient = new QueryClient()
@@ -17,6 +18,7 @@ export function App() {
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />
             <Route path="collection" element={<CollectionPage />} />
+            <Route path="collection/:region" element={<RegionCollectionPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="objects/:objectId" element={<ArtworkPage />} />
             <Route path="*" element={<NotFoundPage />} />
