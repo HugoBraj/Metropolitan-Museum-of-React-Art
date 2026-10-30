@@ -9,6 +9,8 @@
   --color-primary-hover: #c90026;
   --color-accent: #9c8062;
   --color-border: #e5dfd5;
+  --color-preview-overlay-light: rgb(36 35 33 / 8%);
+  --color-preview-overlay-strong: rgb(36 35 33 / 72%);
   --color-map-africa: #b6685f;
   --color-map-asia: #d49a8b;
   --color-map-europe: #bd7d79;

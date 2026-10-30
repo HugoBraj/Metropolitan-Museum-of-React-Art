@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { App } from '../App'
 
@@ -14,22 +14,26 @@ describe('application routes', () => {
   it('renders the home page and main navigation', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Explore the collections of The Met.' })).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'Three ways to discover the art of the world.' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Explore the collection.' })).toBeTruthy()
+    const discoveryNavigation = screen.getByRole('navigation', { name: 'Explore the collection' })
+    expect(within(discoveryNavigation).getAllByRole('link')).toHaveLength(4)
+    expect(screen.queryByText('Featured collection')).toBeNull()
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeTruthy()
   })
 
   it('opens the dedicated continent map from the home page and navbar', () => {
     const homeView = render(<App />)
 
-    fireEvent.click(screen.getByRole('link', { name: 'Open the interactive map of six continents' }))
+    const discoveryNavigation = screen.getByRole('navigation', { name: 'Explore the collection' })
+    fireEvent.click(within(discoveryNavigation).getByRole('link', { name: 'By continents' }))
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
     homeView.unmount()
 
     window.history.replaceState(null, '', '/')
     render(<App />)
 
-    fireEvent.click(screen.getByRole('link', { name: 'By continents' }))
+    const mainNavigation = screen.getByRole('navigation', { name: 'Main navigation' })
+    fireEvent.click(within(mainNavigation).getByRole('link', { name: 'By continents' }))
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
