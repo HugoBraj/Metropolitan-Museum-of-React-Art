@@ -7,14 +7,38 @@
 
 .worldMap :global(path[data-region]) {
   cursor: pointer;
-  fill: #d8d5cd;
   stroke: #fff;
-  stroke-width: 1.5;
+  stroke-width: 2.5;
   transition: fill 150ms ease, stroke 150ms ease;
+}
+
+.worldMap :global(path[data-region='africa']) {
+  fill: #d87878;
+}
+
+.worldMap :global(path[data-region='asia']) {
+  fill: #e7a39a;
+}
+
+.worldMap :global(path[data-region='europe']) {
+  fill: #ca5263;
+}
+
+.worldMap :global(path[data-region='north-america']) {
+  fill: #e9967d;
+}
+
+.worldMap :global(path[data-region='south-america']) {
+  fill: #b94255;
+}
+
+.worldMap :global(path[data-region='oceania']) {
+  fill: #edb9a7;
 }
 
 .worldMap :global(path[data-region]:hover) {
   fill: var(--color-primary);
+  stroke-width: 3;
 }
 
 .worldMap :global(path[data-region]:focus-visible) {
