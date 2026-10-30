@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page introduces three collection-discovery modes with a featured Open Access artwork. The continent map has its own route and leads to region artwork lists. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for categories, continents, chronology, and statistics. The continent map has its own route and leads to region artwork lists. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
 
 ## Requirements
 
@@ -38,7 +38,7 @@ The test suite covers the home and not-found routes, navigation to the dedicated
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible.
 - `src/components/RoutePlaceholder` renders the simple category, chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
-- `src/pages/HomePage` renders the landing page and discovery cards; `src/pages/ContinentsPage` renders the dedicated interactive map.
+- `src/pages/HomePage` renders the introduction and four image-backed discovery links; `src/pages/ContinentsPage` renders the dedicated interactive map.
 - `src/pages/RegionCollectionPage` loads the selected region's artwork list.
 - `src/pages/CollectionPage`, `src/pages/CategoriesPage`, `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` are route placeholders.
 - `src/pages/NotFoundPage` handles unmatched routes.
