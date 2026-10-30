@@ -14,8 +14,23 @@ describe('application routes', () => {
   it('renders the home page and main navigation', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Art from around the world' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Explore the collections of The Met.' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Three ways to discover the art of the world.' })).toBeTruthy()
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeTruthy()
+  })
+
+  it('opens the dedicated continent map from the home page and navbar', () => {
+    const homeView = render(<App />)
+
+    fireEvent.click(screen.getByRole('link', { name: 'Open the interactive map of six continents' }))
+    expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
+    homeView.unmount()
+
+    window.history.replaceState(null, '', '/')
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('link', { name: 'By continents' }))
+    expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
   it('renders the not-found page for an unknown route', () => {
@@ -47,10 +62,11 @@ describe('application routes', () => {
     const navigationToggle = screen.getByRole('button', { name: 'Close navigation' })
     expect(navigationToggle.getAttribute('aria-expanded')).toBe('true')
 
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
     fireEvent.change(screen.getByRole('searchbox', { name: 'Search artworks' }), {
       target: { value: 'blue flowers' },
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Search' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Submit artwork search' }))
 
     expect(screen.getByRole('heading', { name: 'Search page' })).toBeTruthy()
   })

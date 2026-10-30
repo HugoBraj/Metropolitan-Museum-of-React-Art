@@ -3,10 +3,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout/AppLayout'
 import { ArtworkPage } from './pages/ArtworkPage/ArtworkPage'
 import { CollectionPage } from './pages/CollectionPage/CollectionPage'
+import { CategoriesPage } from './pages/CategoriesPage/CategoriesPage'
+import { ContinentsPage } from './pages/ContinentsPage/ContinentsPage'
+import { ChronologyPage } from './pages/ChronologyPage/ChronologyPage'
 import { HomePage } from './pages/HomePage/HomePage'
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 import { RegionCollectionPage } from './pages/RegionCollectionPage/RegionCollectionPage'
 import { SearchPage } from './pages/SearchPage/SearchPage'
+import { StatisticsPage } from './pages/StatisticsPage/StatisticsPage'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +23,10 @@ export function App() {
             <Route index element={<HomePage />} />
             <Route path="collection" element={<CollectionPage />} />
             <Route path="collection/:region" element={<RegionCollectionPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
+            <Route path="continents" element={<ContinentsPage />} />
+            <Route path="chronology" element={<ChronologyPage />} />
+            <Route path="statistics" element={<StatisticsPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="objects/:objectId" element={<ArtworkPage />} />
             <Route path="*" element={<NotFoundPage />} />

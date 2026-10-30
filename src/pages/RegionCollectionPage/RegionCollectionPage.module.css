@@ -53,7 +53,7 @@
 .retryButton:hover,
 .retryButton:focus-visible {
   background-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-surface);
 }
 
 @media (max-width: 900px) {

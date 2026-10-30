@@ -39,6 +39,7 @@ describe('WorldMap', () => {
       } as Response
     })
     vi.stubGlobal('fetch', fetchMock)
+    window.history.replaceState(null, '', '/continents')
     render(<App />)
 
     fireEvent.click(screen.getByRole('link', { name: 'Browse Africa artworks' }))

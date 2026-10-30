@@ -1,49 +1,437 @@
 .homePage {
-  max-width: 76rem;
+  width: min(100% - 3rem, var(--content-width));
   margin-inline: auto;
-  padding: 2rem 1.5rem 3rem;
+  padding-block: 1.75rem 1.25rem;
 }
 
-.pageHeader {
-  max-width: 46rem;
-  margin-bottom: 1rem;
+.heroSection {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  align-items: start;
+  gap: 2rem;
+}
+
+.heroCopy {
+  padding-top: 0.2rem;
 }
 
 .eyebrow {
-  margin: 0 0 0.5rem;
-  color: var(--color-primary);
-  font-size: 0.8rem;
+  margin: 0 0 0.55rem;
+  color: var(--color-accent);
+  font-size: 0.67rem;
   font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .pageTitle {
-  margin: 0 0 0.75rem;
+  max-width: 24rem;
+  margin: 0 0 0.8rem;
   color: var(--color-text);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3rem;
-  font-weight: 400;
-  line-height: 1.1;
-}
-
-.mapSection {
-  border-top: 1px solid var(--color-border);
-  padding-top: 1rem;
-}
-
-.mapHeading {
-  margin: 0;
-  color: var(--color-text);
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 2.8rem;
   font-weight: 600;
+  line-height: 1.08;
 }
 
-@media (max-width: 640px) {
-  .homePage {
-    padding: 1.5rem 1rem 2rem;
+.heroDescription {
+  max-width: 31rem;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  min-height: 2.4rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.primaryAction {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.primaryAction:hover,
+.primaryAction:focus-visible {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.secondaryAction {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.secondaryAction:hover,
+.secondaryAction:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.actionSeparator {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.featuredCard {
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background-color: var(--color-surface);
+  padding: 0.7rem;
+}
+
+.featuredImageLink {
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--card-radius) - 2px);
+}
+
+.featuredImage,
+.featuredImageFallback {
+  display: block;
+  width: 100%;
+  height: 9rem;
+  background-color: var(--color-surface-muted);
+  object-fit: cover;
+  object-position: center 42%;
+}
+
+.featuredImageFallback {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+}
+
+.featuredCaption {
+  padding: 0.6rem 0.05rem 0.15rem;
+}
+
+.featuredCaption h2 {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.featuredCaption p {
+  margin: 0 0 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.artworkCredit {
+  color: var(--color-accent);
+  font-size: 0.65rem;
+  text-decoration: none;
+}
+
+.artworkCredit:hover,
+.artworkCredit:focus-visible {
+  text-decoration: underline;
+}
+
+.discoverySection {
+  margin-top: 3.2rem;
+}
+
+.discoverySection > .eyebrow {
+  margin-bottom: 0.3rem;
+}
+
+.discoveryHeading {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.discoveryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.discoveryCard {
+  display: flex;
+  min-width: 0;
+  min-height: 17.8rem;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background-color: var(--color-surface);
+  padding: 0.9rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.cardIcon {
+  display: grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--color-surface-muted);
+  color: var(--color-text);
+  font-size: 0.95rem;
+}
+
+.cardDescription {
+  margin: 0 0 0.65rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.categoryList,
+.locationList {
+  display: grid;
+  gap: 0.32rem;
+  margin: 0 0 0.65rem;
+  padding: 0;
+  list-style: none;
+}
+
+.categoryList a,
+.locationList a {
+  display: flex;
+  min-height: 1.25rem;
+  align-items: center;
+  color: var(--color-text);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.categoryList a:hover,
+.categoryList a:focus-visible,
+.locationList a:hover,
+.locationList a:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.mapPreview {
+  position: relative;
+  display: grid;
+  height: 6.2rem;
+  overflow: hidden;
+  place-items: center;
+  margin-bottom: 0.65rem;
+  border-radius: calc(var(--card-radius) - 2px);
+  background-color: var(--color-map-preview);
+}
+
+.mapPreviewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+.mapPreviewLabel {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.6rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.locationList {
+  gap: 0.15rem;
+  margin-bottom: 0.45rem;
+}
+
+.timelineList {
+  display: grid;
+  gap: 0.62rem;
+  margin: 0.2rem 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.timelineList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.timelineIndex {
+  display: grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--color-surface-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.timelineList li:first-child .timelineIndex {
+  background-color: var(--color-text);
+  color: var(--color-surface);
+}
+
+.timelineList li > span:last-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.timelineList strong {
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.timelineList small {
+  color: var(--color-accent);
+  font-size: 0.63rem;
+}
+
+.cardAction {
+  display: flex;
+  min-height: 1.8rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  color: var(--color-text);
+  font-size: 0.67rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cardAction:hover,
+.cardAction:focus-visible {
+  color: var(--color-accent);
+}
+
+.cardAction span {
+  font-size: 1rem;
+}
+
+.pageFooter {
+  display: flex;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: var(--color-text);
+  color: var(--color-surface);
+  padding: 0.6rem max(1.5rem, calc((100vw - var(--content-width)) / 2));
+  font-size: 0.65rem;
+}
+
+.pageFooter a {
+  color: var(--color-surface);
+  text-decoration: none;
+}
+
+.pageFooter a:hover,
+.pageFooter a:focus-visible {
+  text-decoration: underline;
+}
+
+@media (max-width: 850px) {
+  .heroSection {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 1.25rem;
   }
 
   .pageTitle {
-    font-size: 2.25rem;
+    font-size: 2.4rem;
+  }
+
+  .discoveryGrid {
+    gap: 0.65rem;
+  }
+
+  .discoveryCard {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .homePage {
+    width: min(100% - 2rem, var(--content-width));
+    padding-top: 1.5rem;
+  }
+
+  .heroSection {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .pageTitle {
+    max-width: 34rem;
+    font-size: 2.35rem;
+  }
+
+  .featuredImage,
+  .featuredImageFallback {
+    height: 10rem;
+  }
+
+  .discoverySection {
+    margin-top: 2.25rem;
+  }
+
+  .discoveryHeading {
+    font-size: 1.2rem;
+  }
+
+  .discoveryGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .discoveryCard {
+    min-height: auto;
+    padding: 0.9rem;
+  }
+
+  .pageFooter {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    padding-inline: 1rem;
   }
 }
