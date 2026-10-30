@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page includes an interactive continent map that opens a list of related artworks. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page introduces three collection-discovery modes with a featured Open Access artwork. The continent map has its own route and leads to region artwork lists. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
 
 ## Requirements
 
@@ -28,18 +28,19 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the home and not-found routes, the Met API client, and its React Query hooks.
+The test suite covers the home and not-found routes, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
 
 ## Current structure
 
 - `src/App.tsx` defines the routes and router.
 - `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`.
-- `src/components/NavigationBar` contains responsive navigation, a mobile side panel, and a search form that routes to the search placeholder.
+- `src/components/NavigationBar` contains the responsive museum navigation and a search form that routes to the search placeholder.
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible.
+- `src/components/RoutePlaceholder` renders the simple category, chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
-- `src/components/RoutePlaceholder` renders the simple placeholder pages.
-- `src/pages/HomePage` renders the continent map; `src/pages/RegionCollectionPage` loads the selected region's artwork list.
-- `src/pages/CollectionPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` are route placeholders.
+- `src/pages/HomePage` renders the landing page and discovery cards; `src/pages/ContinentsPage` renders the dedicated interactive map.
+- `src/pages/RegionCollectionPage` loads the selected region's artwork list.
+- `src/pages/CollectionPage`, `src/pages/CategoriesPage`, `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` are route placeholders.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search and object-detail requests.
@@ -51,11 +52,15 @@ The test suite covers the home and not-found routes, the Met API client, and its
 ## Planned features
 
 - Connect search submission to the Met API and add dynamic artwork suggestions in the navigation.
-- Browse collection categories and add a chronology exploration view.
+- Implement category and chronology exploration pages.
 - Show artwork metadata on the object detail route.
 - Add a chart based on a bounded sample of returned collection objects.
 
 The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. The continent view fetches at most 12 object details at a time; North America uses country-level geographic searches because the API returns no results for its broad continent name. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
+
+## Visual system
+
+Shared colors, map-region fills, shadows, and fonts are defined as CSS custom properties in `src/styles/globalStyles.css`. DM Sans and Manrope are loaded from Google Fonts with system fallbacks.
 
 ## Architecture and conventions
 

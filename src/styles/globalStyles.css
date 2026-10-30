@@ -1,9 +1,29 @@
 :root {
-  --color-text: #08060d;
+  --color-canvas: #f8f6f1;
+  --color-surface: #fff;
+  --color-surface-muted: #f0ede7;
+  --color-map-preview: #e8e5dc;
+  --color-text: #242321;
+  --color-text-muted: #69655f;
   --color-primary: #e4002b;
-  --color-border: #919191;
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --color-primary-hover: #c90026;
+  --color-accent: #9c8062;
+  --color-border: #e5dfd5;
+  --color-map-africa: #b6685f;
+  --color-map-asia: #d49a8b;
+  --color-map-europe: #bd7d79;
+  --color-map-north-america: #dfb39b;
+  --color-map-south-america: #9e4e53;
+  --color-map-oceania: #cf9a75;
+  --color-overlay: rgb(36 35 33 / 28%);
+  --shadow-search: 0 0.5rem 1.5rem rgb(36 35 33 / 12%);
+  --shadow-navigation: -0.5rem 0 1.5rem rgb(36 35 33 / 12%);
+  --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
+  --font-display: 'Manrope', 'DM Sans', 'Segoe UI', sans-serif;
+  --content-width: 82rem;
+  --card-radius: 0.5rem;
 
+  background-color: var(--color-canvas);
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -22,8 +42,18 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  background-color: var(--color-canvas);
 }
 
 a {
   text-underline-offset: 0.2em;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
 }
