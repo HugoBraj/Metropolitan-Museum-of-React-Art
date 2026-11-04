@@ -1,28 +1,34 @@
 import { Link } from 'react-router-dom'
-import continentMapPreview from '../../assets/continentsLow.svg'
 import styles from './HomePage.module.css'
 
 const DISCOVERY_LINKS = [
   {
+    id: 'categories',
     label: 'By categories',
     href: '/categories',
-    image: 'https://images.metmuseum.org/CRDImages/ep/web-large/DT2163.jpg',
+    image: '/bg_home_buttons/by-categories.jpg',
+    description: 'Browse the collection by department and medium.',
   },
   {
+    id: 'continents',
     label: 'By continents',
     href: '/continents',
-    image: continentMapPreview,
-    isMap: true,
+    image: '/bg_home_buttons/by-continents.jpg',
+    description: 'Explore artworks connected to six world regions.',
   },
   {
+    id: 'chronology',
     label: 'By chronology',
     href: '/chronology',
-    image: 'https://images.metmuseum.org/CRDImages/gr/web-large/DP-26340-001.jpg',
+    image: '/bg_home_buttons/by-chronology.jpg',
+    description: 'Follow art across centuries and movements.',
   },
   {
+    id: 'statistics',
     label: 'See statistics',
     href: '/statistics',
-    image: 'https://images.metmuseum.org/CRDImages/ad/web-large/DT1551.jpg',
+    image: '/bg_home_buttons/by-statistics.jpg',
+    description: 'Explore patterns across the collection.',
   },
 ] as const
 
@@ -41,16 +47,21 @@ export function HomePage() {
         <nav aria-label="Explore the collection" className={styles.discoveryGrid}>
           {DISCOVERY_LINKS.map((discoveryLink) => (
             <Link
+              aria-describedby={`discovery-description-${discoveryLink.id}`}
               aria-label={discoveryLink.label}
               className={styles.discoveryLink}
               key={discoveryLink.label}
               style={{
                 backgroundImage: `linear-gradient(180deg, var(--color-preview-overlay-light) 15%, var(--color-preview-overlay-strong) 100%), url("${discoveryLink.image}")`,
-                backgroundSize: 'isMap' in discoveryLink ? 'cover, contain' : 'cover, cover',
               }}
               to={discoveryLink.href}
             >
-              <span className={styles.discoveryLabel}>{discoveryLink.label}</span>
+              <span className={styles.discoveryContent}>
+                <span className={styles.discoveryLabel}>{discoveryLink.label}</span>
+                <span className={styles.discoveryDescription} id={`discovery-description-${discoveryLink.id}`}>
+                  {discoveryLink.description}
+                </span>
+              </span>
               <span aria-hidden="true" className={styles.discoveryArrow}>→</span>
             </Link>
           ))}
