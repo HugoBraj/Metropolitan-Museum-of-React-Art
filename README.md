@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the home and not-found routes, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
+The test suite covers the home and not-found routes, discovery-link descriptions, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
 
 ## Current structure
 
@@ -38,7 +38,7 @@ The test suite covers the home and not-found routes, navigation to the dedicated
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible.
 - `src/components/RoutePlaceholder` renders the simple category, chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
-- `src/pages/HomePage` renders the introduction and four image-backed discovery links; `src/pages/ContinentsPage` renders the dedicated interactive map.
+- `src/pages/HomePage` renders a flexible introduction above four responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the dedicated interactive map.
 - `src/pages/RegionCollectionPage` loads the selected region's artwork list.
 - `src/pages/CollectionPage`, `src/pages/CategoriesPage`, `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` are route placeholders.
 - `src/pages/NotFoundPage` handles unmatched routes.

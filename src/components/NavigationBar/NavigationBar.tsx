@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { Menu, Search, X } from 'lucide-react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import styles from './NavigationBar.module.css'
 
@@ -74,7 +75,7 @@ export function NavigationBar() {
           onClick={() => setIsSearchOpen(!isSearchOpen)}
           type="button"
         >
-          <span aria-hidden="true" className={styles.searchIcon} />
+          <Search aria-hidden="true" size={16} strokeWidth={1.8} />
         </button>
         <button
           aria-controls="main-navigation"
@@ -84,11 +85,11 @@ export function NavigationBar() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           type="button"
         >
-          <span aria-hidden="true" className={styles.menuIcon}>
-            <span />
-            <span />
-            <span />
-          </span>
+          {isMenuOpen ? (
+            <X aria-hidden="true" size={18} strokeWidth={1.8} />
+          ) : (
+            <Menu aria-hidden="true" size={18} strokeWidth={1.8} />
+          )}
         </button>
       </div>
 
@@ -113,7 +114,7 @@ export function NavigationBar() {
             value={searchTerm}
           />
           <button aria-label="Submit artwork search" className={styles.searchButton} type="submit">
-            <span aria-hidden="true" className={styles.searchIcon} />
+            <Search aria-hidden="true" size={16} strokeWidth={1.8} />
           </button>
         </form>
       )}
