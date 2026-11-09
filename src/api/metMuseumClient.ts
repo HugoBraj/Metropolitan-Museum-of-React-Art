@@ -3,7 +3,7 @@ const SEARCH_ENDPOINT = `${API_ROOT}/v1.1/search`
 const OBJECT_ENDPOINT = `${API_ROOT}/v1/objects`
 const DEFAULT_SEARCH_LIMIT = 20
 const MAX_SEARCH_LIMIT = 500
-const MAX_SEARCH_WINDOW = 10_000
+export const MAX_SEARCH_WINDOW = 10_000
 
 export interface SearchObjectsParams {
   q?: string
@@ -25,6 +25,11 @@ export interface SearchObjectsParams {
 export interface ObjectSearchResponse {
   total: number
   objectIDs: number[]
+}
+
+export interface Department {
+  departmentId: number
+  displayName: string
 }
 
 export interface MetObject {
@@ -55,6 +60,10 @@ export interface MetObject {
 interface RawObjectSearchResponse {
   total: number
   objectIDs: number[] | null
+}
+
+interface RawDepartmentsResponse {
+  departments: Department[]
 }
 
 export class MetMuseumApiError extends Error {
@@ -94,6 +103,11 @@ async function requestJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   return (await response.json()) as T
 }
 
+export async function getDepartments(signal?: AbortSignal): Promise<Department[]> {
+  const response = await requestJson<RawDepartmentsResponse>(`${API_ROOT}/v1/departments`, signal)
+  return response.departments
+}
+
 export async function searchObjects(
   params: SearchObjectsParams,
   signal?: AbortSignal,
@@ -111,19 +125,13 @@ export async function searchObjects(
   }
 
   const searchParams = new URLSearchParams({ offset: String(offset), limit: String(limit) })
-  let hasFilter = false
 
   for (const [key, value] of Object.entries(filters)) {
     if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
       continue
     }
 
-    hasFilter = true
     searchParams.set(key, String(value).trim())
-  }
-
-  if (!hasFilter) {
-    throw new TypeError('Provide a search query or at least one search filter.')
   }
 
   const response = await requestJson<RawObjectSearchResponse>(

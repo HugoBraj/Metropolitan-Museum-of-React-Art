@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  getDepartments,
   getObjectById,
   MetMuseumApiError,
   searchObjects,
@@ -25,6 +26,19 @@ describe('Met Museum API client', () => {
     vi.unstubAllGlobals()
   })
 
+  it('fetches collection departments', async () => {
+    fetchMock.mockResolvedValue(createResponse({
+      departments: [{ departmentId: 1, displayName: 'American Decorative Arts' }],
+    }))
+
+    await expect(getDepartments()).resolves.toEqual([
+      { departmentId: 1, displayName: 'American Decorative Arts' },
+    ])
+    expect(String(fetchMock.mock.calls[0][0])).toBe(
+      'https://collectionapi.metmuseum.org/public/collection/v1/departments',
+    )
+  })
+
   it('uses paginated v1.1 search and normalizes empty object IDs', async () => {
     fetchMock.mockResolvedValue(createResponse({ total: 0, objectIDs: null }))
     const controller = new AbortController()
@@ -45,6 +59,20 @@ describe('Met Museum API client', () => {
     expect(url.searchParams.get('limit')).toBe('10')
     expect(requestOptions?.signal).toBe(controller.signal)
     expect(result).toEqual({ total: 0, objectIDs: [] })
+  })
+
+  it('supports a bounded initial search without filters', async () => {
+    fetchMock.mockResolvedValue(createResponse({ total: 2, objectIDs: [1, 10] }))
+
+    await expect(searchObjects({ offset: 0, limit: 12 })).resolves.toEqual({
+      total: 2,
+      objectIDs: [1, 10],
+    })
+
+    const url = new URL(String(fetchMock.mock.calls[0][0]))
+    expect(url.pathname).toBe('/public/collection/v1.1/search')
+    expect(url.searchParams.get('offset')).toBe('0')
+    expect(url.searchParams.get('limit')).toBe('12')
   })
 
   it('requests a single object from the v1 endpoint', async () => {
