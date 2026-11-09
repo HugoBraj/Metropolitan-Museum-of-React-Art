@@ -68,6 +68,7 @@ describe('CollectionPage', () => {
     fireEvent.change(screen.getByLabelText('Created from'), { target: { value: '1000' } })
     fireEvent.change(screen.getByLabelText('Created to'), { target: { value: '1900' } })
     fireEvent.click(screen.getByLabelText('Highlights'))
+    fireEvent.click(screen.getByLabelText('Has an image'))
     fireEvent.click(screen.getByRole('button', { name: 'Search collection' }))
 
     await waitFor(() => {
@@ -88,6 +89,7 @@ describe('CollectionPage', () => {
     expect(lastSearchUrl.searchParams.get('dateBegin')).toBe('1000')
     expect(lastSearchUrl.searchParams.get('dateEnd')).toBe('1900')
     expect(lastSearchUrl.searchParams.get('isHighlight')).toBe('true')
+    expect(lastSearchUrl.searchParams.get('hasImages')).toBe('true')
 
     await screen.findByText(/Showing 1–2 of 2 objects/)
     fireEvent.change(screen.getByLabelText('Sort this page by creation date'), {
