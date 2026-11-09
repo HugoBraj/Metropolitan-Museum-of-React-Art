@@ -1,6 +1,14 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../App'
+
+function createResponse(body: unknown): Response {
+  return {
+    ok: true,
+    status: 200,
+    json: async () => body,
+  } as Response
+}
 
 describe('application routes', () => {
   beforeEach(() => {
@@ -9,6 +17,7 @@ describe('application routes', () => {
 
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
   it('renders the home page and main navigation', () => {
@@ -52,10 +61,21 @@ describe('application routes', () => {
   })
 
   it('renders the collection and artwork routes', () => {
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/departments')) {
+        return createResponse({ departments: [] })
+      }
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 0, objectIDs: [] })
+      }
+      return createResponse({ objectID: 45734 })
+    }))
+
     window.history.replaceState(null, '', '/collection')
     const collectionView = render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Collection page' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'All objects' })).toBeTruthy()
     collectionView.unmount()
 
     window.history.replaceState(null, '', '/objects/45734')

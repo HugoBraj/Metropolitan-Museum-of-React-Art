@@ -1,0 +1,302 @@
+.collectionPage {
+  width: min(100% - 3rem, var(--content-width));
+  min-height: calc(100vh - 3.25rem);
+  margin-inline: auto;
+  padding-block: 2rem 3rem;
+}
+
+.pageHeader {
+  margin-bottom: 1.25rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--color-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.pageDescription {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.searchPanel {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  background-color: var(--color-surface);
+  padding: 1rem;
+}
+
+.searchRow {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.queryInput {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3rem;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.55rem 0.75rem;
+}
+
+.queryInput:focus-visible,
+.filterField input:focus-visible,
+.filterField select:focus-visible,
+.sortControl select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.searchButton {
+  flex: 0 0 auto;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.3rem;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  font-weight: 600;
+}
+
+.searchButton:hover,
+.searchButton:focus-visible {
+  border-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover);
+}
+
+.filtersDisclosure {
+  margin-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.75rem;
+}
+
+.filtersDisclosure summary {
+  width: fit-content;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.filterField {
+  display: grid;
+  min-width: 0;
+  gap: 0.3rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.filterField input,
+.filterField select,
+.sortControl select {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3rem;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.checkboxFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0.85rem 0 0;
+  border: 0;
+  padding: 0;
+}
+
+.checkboxFilters legend {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.checkboxFilters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-text);
+  font-size: 0.75rem;
+}
+
+.checkboxFilters input {
+  accent-color: var(--color-primary);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.clearButton {
+  min-height: 2.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+}
+
+.clearButton:hover:not(:disabled),
+.clearButton:focus-visible:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.clearButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.filterError {
+  margin: 0.75rem 0 0;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+}
+
+.filterNotice {
+  margin: 0 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.resultsToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.resultCount {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.sortControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+}
+
+.sortControl select {
+  width: auto;
+  min-height: 2rem;
+}
+
+.artworkGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+}
+
+.statusMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 900px) {
+  .filterGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .artworkGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .collectionPage {
+    width: min(100% - 2rem, var(--content-width));
+    padding-block: 1.5rem 2rem;
+  }
+
+  .pageTitle {
+    font-size: 1.9rem;
+  }
+
+  .searchPanel {
+    padding: 0.75rem;
+  }
+
+  .searchRow {
+    flex-direction: column;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resultsToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .artworkGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .filterGrid {
+    grid-template-columns: 1fr;
+  }
+}

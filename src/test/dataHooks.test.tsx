@@ -4,6 +4,8 @@ import type { PropsWithChildren } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useArtwork } from '../hooks/useArtwork'
 import { useArtworkSearch } from '../hooks/useArtworkSearch'
+import { useCollectionArtworks } from '../hooks/useCollectionArtworks'
+import { useDepartments } from '../hooks/useDepartments'
 
 function createResponse(body: unknown): Response {
   return {
@@ -62,5 +64,48 @@ describe('collection data hooks', () => {
       title: 'Quail and Millet',
     })
     expect(fetchMock).toHaveBeenCalledOnce()
+  })
+
+  it('fetches and caches collection departments', async () => {
+    fetchMock.mockResolvedValue(createResponse({
+      departments: [{ departmentId: 1, displayName: 'American Decorative Arts' }],
+    }))
+
+    const { result } = renderHook(() => useDepartments(), {
+      wrapper: createQueryWrapper(),
+    })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    expect(result.current.data).toEqual([
+      { departmentId: 1, displayName: 'American Decorative Arts' },
+    ])
+  })
+
+  it('hydrates a bounded paginated collection result page', async () => {
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 25, objectIDs: [45734] })
+      }
+
+      return createResponse({ objectID: 45734, title: 'Quail and Millet' })
+    })
+
+    const { result } = renderHook(
+      () => useCollectionArtworks({ q: 'quail', hasImages: true }, 1),
+      { wrapper: createQueryWrapper() },
+    )
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    const searchUrl = new URL(String(fetchMock.mock.calls[0][0]))
+    expect(searchUrl.searchParams.get('offset')).toBe('12')
+    expect(searchUrl.searchParams.get('limit')).toBe('12')
+    expect(result.current.data).toMatchObject({
+      total: 25,
+      artworks: [{ objectID: 45734, title: 'Quail and Millet' }],
+    })
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 })
