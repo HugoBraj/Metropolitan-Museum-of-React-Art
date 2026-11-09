@@ -13,13 +13,13 @@ function createResponse(body: unknown): Response {
   } as Response
 }
 
-function createWrapper() {
+function createWrapper(initialRoute = '/collection') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
 
   return function CollectionPageWrapper({ children }: PropsWithChildren) {
     return (
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={['/collection']}>{children}</MemoryRouter>
+        <MemoryRouter initialEntries={[initialRoute]}>{children}</MemoryRouter>
       </QueryClientProvider>
     )
   }
@@ -110,5 +110,23 @@ describe('CollectionPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Search collection' }))
 
     expect(screen.getByRole('alert').textContent).toBe('Enter both years to filter by creation date.')
+  })
+
+  it('searches the selected continent with its geographic terms', async () => {
+    render(<CollectionPage />, { wrapper: createWrapper('/collection?region=north-america') })
+
+    expect(screen.getByRole('heading', { name: 'All objects' })).toBeTruthy()
+    await screen.findByRole('link', { name: /Newer vessel/ })
+
+    const searchUrls = fetchMock.mock.calls
+      .map(([input]) => new URL(String(input)))
+      .filter((url) => url.pathname.endsWith('/search'))
+    const locations = searchUrls.map((url) => url.searchParams.get('geoLocation'))
+
+    expect(searchUrls).toHaveLength(6)
+    expect(locations).toContain('United States')
+    expect(locations).toContain('Canada')
+    expect(locations).not.toContain('North America')
+    expect(fetchMock).toHaveBeenCalledTimes(9)
   })
 })

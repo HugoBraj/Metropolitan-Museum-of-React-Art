@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for categories, continents, chronology, and statistics. The continent map has its own route and leads to region artwork lists. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for categories, continents, chronology, and statistics. The dedicated continent map shows artwork counts on hover and opens All objects with the selected region prefiltered. Category browsing, dynamic search suggestions, artwork details, chronology, and charts are still planned.
 
 ## Requirements
 
@@ -35,10 +35,10 @@ The test suite covers the home and not-found routes, discovery-link descriptions
 - `src/App.tsx` defines the routes and router.
 - `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`.
 - `src/components/NavigationBar` contains the responsive museum navigation and a search form that routes to the search placeholder.
-- `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible.
+- `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible, with cached per-continent result counts.
 - `src/components/RoutePlaceholder` renders the simple category, chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
-- `src/pages/HomePage` renders a flexible introduction above four responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the dedicated interactive map.
+- `src/pages/HomePage` renders a flexible introduction above four responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the viewport-filling interactive map and routes selections to filtered collection results.
 - `src/pages/RegionCollectionPage` loads the selected region's artwork list.
 - `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters with paginated artwork results. Date sorting applies to the current page.
 - `src/pages/CategoriesPage`, `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, `src/pages/SearchPage`, and `src/pages/ArtworkPage` are route placeholders.
@@ -58,7 +58,7 @@ The test suite covers the home and not-found routes, discovery-link descriptions
 - Show artwork metadata on the object detail route.
 - Add a chart based on a bounded sample of returned collection objects.
 
-The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. Collection and continent views hydrate at most 12 object details at a time; North America uses country-level geographic searches because the API returns no results for its broad continent name. Creation-date sorting currently applies to the loaded result page, not the entire API result set. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
+The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. Collection and continent views hydrate at most 12 object details at a time; North America uses country-level geographic searches because the API returns no results for its broad continent name. Continent counts are queried and cached independently by geographic term. Creation-date sorting currently applies to the loaded result page, not the entire API result set. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
 
 ## Visual system
 

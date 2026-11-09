@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
 import { MAX_SEARCH_WINDOW } from '../../api/metMuseumClient'
 import type { SearchObjectsParams } from '../../api/metMuseumClient'
+import { findArtworkRegion } from '../../constants/artworkRegions'
 import { COLLECTION_PAGE_SIZE, useCollectionArtworks } from '../../hooks/useCollectionArtworks'
 import { useDepartments } from '../../hooks/useDepartments'
 import styles from './CollectionPage.module.css'
@@ -47,10 +48,16 @@ export function CollectionPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [filterError, setFilterError] = useState('')
   const departmentsQuery = useDepartments()
-  const maximumPage = Math.floor((MAX_SEARCH_WINDOW - 1) / COLLECTION_PAGE_SIZE)
+  const region = findArtworkRegion(searchParams.get('region') ?? undefined)
+  const perLocationPageSize = Math.ceil(COLLECTION_PAGE_SIZE / (region?.geoLocations.length ?? 1))
+  const maximumPage = Math.ceil(MAX_SEARCH_WINDOW / perLocationPageSize) - 1
   const page = Math.min(Math.max(0, parseInteger(searchParams.get('page')) ?? 0), maximumPage)
   const sortOrder: SortOrder = searchParams.get('sort') === 'date-asc' ? 'date-asc' : 'date-desc'
-  const artworksQuery = useCollectionArtworks(getSearchFilters(searchParams), page)
+  const searchFilters = getSearchFilters(searchParams)
+  if (region) {
+    searchFilters.geoLocation = undefined
+  }
+  const artworksQuery = useCollectionArtworks(searchFilters, page, region?.slug)
   const artworks = artworksQuery.data?.artworks.slice().sort((firstArtwork, secondArtwork) => {
     const firstYear = getCreationYear(firstArtwork)
     const secondYear = getCreationYear(secondArtwork)
@@ -62,7 +69,11 @@ export function CollectionPage() {
     return sortOrder === 'date-asc' ? firstYear - secondYear : secondYear - firstYear
   }) ?? []
   const matchCount = Math.min(artworksQuery.data?.total ?? 0, MAX_SEARCH_WINDOW)
-  const pageCount = Math.ceil(matchCount / COLLECTION_PAGE_SIZE)
+  const maximumAvailableResults = region
+    ? maximumPage * COLLECTION_PAGE_SIZE
+      + Math.min(COLLECTION_PAGE_SIZE, (MAX_SEARCH_WINDOW - maximumPage * perLocationPageSize) * region.geoLocations.length)
+    : MAX_SEARCH_WINDOW
+  const pageCount = Math.ceil(Math.min(matchCount, maximumAvailableResults) / COLLECTION_PAGE_SIZE)
   const firstResult = artworks.length > 0 ? page * COLLECTION_PAGE_SIZE + 1 : 0
   const lastResult = firstResult + artworks.length - 1
 
@@ -89,7 +100,9 @@ export function CollectionPage() {
     const nextSearchParams = new URLSearchParams()
     for (const name of ['q', 'medium', 'geoLocation']) {
       const value = String(formData.get(name) ?? '').trim()
-      if (value !== '') {
+      if (name === 'geoLocation' && region && value.toLocaleLowerCase() === region.label.toLocaleLowerCase()) {
+        nextSearchParams.set('region', region.slug)
+      } else if (value !== '') {
         nextSearchParams.set(name, value)
       }
     }
@@ -139,7 +152,11 @@ export function CollectionPage() {
     <main className={styles.collectionPage}>
       <header className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>All objects</h1>
-        <p className={styles.pageDescription}>Search and filter artworks from across the collection.</p>
+        <p className={styles.pageDescription}>
+          {region
+            ? `Search and filter artworks associated with ${region.label}.`
+            : 'Search and filter artworks from across the collection.'}
+        </p>
       </header>
 
       <form className={styles.searchPanel} key={searchParams.toString()} onSubmit={handleSearchSubmit}>
@@ -177,7 +194,7 @@ export function CollectionPage() {
             </label>
             <label className={styles.filterField}>
               <span>Place of origin</span>
-              <input defaultValue={searchParams.get('geoLocation') ?? ''} name="geoLocation" placeholder="e.g. France" />
+              <input defaultValue={region?.label ?? searchParams.get('geoLocation') ?? ''} name="geoLocation" placeholder="e.g. France" />
             </label>
             <label className={styles.filterField}>
               <span>Created from</span>
