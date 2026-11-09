@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { FilterX } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
 import { MAX_SEARCH_WINDOW } from '../../api/metMuseumClient'
@@ -155,9 +156,10 @@ export function CollectionPage() {
           <button className={styles.searchButton} type="submit">Search collection</button>
         </div>
 
-        <details className={styles.filtersDisclosure}>
-          <summary>Filters</summary>
-          <div className={styles.filterGrid}>
+        <div className={styles.filtersBar}>
+          <details className={styles.filtersDisclosure}>
+            <summary>Filters</summary>
+            <div className={styles.filterGrid}>
             <label className={styles.filterField}>
               <span>Department</span>
               <select defaultValue={searchParams.get('departmentId') ?? ''} name="departmentId">
@@ -185,24 +187,30 @@ export function CollectionPage() {
               <span>Created to</span>
               <input defaultValue={searchParams.get('dateEnd') ?? ''} name="dateEnd" placeholder="Year (BCE as negative)" type="number" step="1" />
             </label>
-          </div>
+            </div>
 
-          <fieldset className={styles.checkboxFilters}>
-            <legend>Object attributes</legend>
-            <label><input defaultChecked={searchParams.get('artistOrCulture') === 'true'} name="artistOrCulture" type="checkbox" /> Search artist or culture</label>
-            <label><input defaultChecked={searchParams.get('isHighlight') === 'true'} name="isHighlight" type="checkbox" /> Highlights</label>
-            <label><input defaultChecked={searchParams.get('isOnView') === 'true'} name="isOnView" type="checkbox" /> Currently on view</label>
-            <label><input defaultChecked={searchParams.get('hasImages') === 'true'} name="hasImages" type="checkbox" /> Has an image</label>
-          </fieldset>
-        </details>
+            <fieldset className={styles.checkboxFilters}>
+              <legend>Object attributes</legend>
+              <label><input defaultChecked={searchParams.get('artistOrCulture') === 'true'} name="artistOrCulture" type="checkbox" /> Search artist or culture</label>
+              <label><input defaultChecked={searchParams.get('isHighlight') === 'true'} name="isHighlight" type="checkbox" /> Highlights</label>
+              <label><input defaultChecked={searchParams.get('isOnView') === 'true'} name="isOnView" type="checkbox" /> Currently on view</label>
+              <label><input defaultChecked={searchParams.get('hasImages') === 'true'} name="hasImages" type="checkbox" /> Has an image</label>
+            </fieldset>
+          </details>
+          <button
+            className={`${styles.clearButton} ${styles.clearFiltersButton}`}
+            onClick={clearFilters}
+            type="button"
+          >
+            <FilterX aria-hidden="true" size={15} strokeWidth={1.8} />
+            <span>Clear filters</span>
+          </button>
+        </div>
 
         {filterError && <p className={styles.filterError} role="alert">{filterError}</p>}
         {departmentsQuery.isError && (
           <p className={styles.filterNotice}>Department filters could not be loaded. Other filters are still available.</p>
         )}
-        <div className={styles.formActions}>
-          <button className={styles.clearButton} onClick={clearFilters} type="button">Clear filters</button>
-        </div>
       </form>
 
       <section aria-label="Collection results" className={styles.resultsSection}>

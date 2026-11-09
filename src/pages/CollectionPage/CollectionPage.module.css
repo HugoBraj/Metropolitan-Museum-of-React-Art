@@ -80,10 +80,18 @@
   background-color: var(--color-primary-hover);
 }
 
-.filtersDisclosure {
+.filtersBar {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
   margin-top: 0.85rem;
   border-top: 1px solid var(--color-border);
   padding-top: 0.75rem;
+}
+
+.filtersDisclosure {
+  min-width: 0;
+  flex: 1;
 }
 
 .filtersDisclosure summary {
@@ -152,12 +160,6 @@
   accent-color: var(--color-primary);
 }
 
-.formActions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.75rem;
-}
-
 .clearButton {
   min-height: 2.1rem;
   border: 1px solid var(--color-border);
@@ -167,6 +169,12 @@
   cursor: pointer;
   padding: 0.4rem 0.7rem;
   font-size: 0.75rem;
+}
+
+.clearFiltersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .clearButton:hover:not(:disabled),
