@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import { WorldMap } from '../../components/WorldMap/WorldMap'
 import type { ArtworkRegionSlug } from '../../constants/artworkRegions'
+import { useRegionArtworkCounts } from '../../hooks/useRegionArtworkCounts'
 import styles from './ContinentsPage.module.css'
 
 export function ContinentsPage() {
   const navigate = useNavigate()
+  const { counts, isLoading: isRegionCountLoading, isError: isRegionCountError } = useRegionArtworkCounts()
 
   function handleSelectRegion(region: ArtworkRegionSlug) {
-    navigate(`/collection/${region}`)
+    navigate(`/collection?region=${region}`)
   }
 
   return (
@@ -18,7 +20,12 @@ export function ContinentsPage() {
         <p>Select a continent to browse artworks connected to that region.</p>
       </header>
       <section aria-label="Interactive map of the continents" className={styles.mapRegion}>
-        <WorldMap onSelectRegion={handleSelectRegion} />
+        <WorldMap
+          isRegionCountError={isRegionCountError}
+          isRegionCountLoading={isRegionCountLoading}
+          onSelectRegion={handleSelectRegion}
+          regionArtworkCounts={counts}
+        />
       </section>
     </main>
   )

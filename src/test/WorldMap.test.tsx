@@ -25,12 +25,23 @@ describe('WorldMap', () => {
     expect(onSelectRegion).toHaveBeenNthCalledWith(2, 'africa')
   })
 
-  it('navigates from a continent to its artwork list', async () => {
+  it('shows the region name and artwork count on hover', () => {
+    render(<WorldMap onSelectRegion={vi.fn()} regionArtworkCounts={{ africa: 427 }} />)
+
+    fireEvent.mouseOver(screen.getByRole('link', { name: 'Browse Africa artworks' }))
+
+    expect(screen.getByRole('tooltip').textContent).toContain('Africa')
+    expect(screen.getByRole('tooltip').textContent).toContain('427 artworks')
+  })
+
+  it('opens All objects with the continent filter applied', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
-      const body = url.pathname.endsWith('/search')
-        ? { total: 1, objectIDs: [45734] }
-        : { objectID: 45734, title: 'Quail and Millet', artistDisplayName: 'Kiyohara Yukinobu' }
+      const body = url.pathname.endsWith('/departments')
+        ? { departments: [] }
+        : url.pathname.endsWith('/search')
+          ? { total: 1, objectIDs: [45734] }
+          : { objectID: 45734, title: 'Quail and Millet', artistDisplayName: 'Kiyohara Yukinobu' }
 
       return {
         ok: true,
@@ -44,8 +55,12 @@ describe('WorldMap', () => {
 
     fireEvent.click(screen.getByRole('link', { name: 'Browse Africa artworks' }))
 
-    expect(await screen.findByRole('heading', { name: 'Africa' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
+    expect(window.location.search).toContain('region=africa')
     await waitFor(() => expect(screen.getByRole('link', { name: /Quail and Millet/ })).toBeTruthy())
-    expect(fetchMock).toHaveBeenCalledTimes(2)
+    const artworkRequests = fetchMock.mock.calls.filter(([input]) =>
+      new URL(String(input)).pathname.endsWith('/objects/45734'),
+    )
+    expect(artworkRequests).toHaveLength(1)
   })
 })
