@@ -15,7 +15,6 @@ export function ContinentsPage() {
   return (
     <main className={styles.continentsPage}>
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>Explore the collection</p>
         <h1 className={styles.pageTitle}>By continent</h1>
         <p>Select a continent to browse artworks connected to that region.</p>
       </header>

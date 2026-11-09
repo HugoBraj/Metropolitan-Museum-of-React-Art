@@ -25,8 +25,24 @@ export function WorldMap({
 }: WorldMapProps) {
   const mapRef = useRef<SVGSVGElement>(null)
   const [hoveredRegionSlug, setHoveredRegionSlug] = useState<ArtworkRegionSlug>()
+  const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null)
   const hoveredRegion = ARTWORK_REGIONS.find((region) => region.slug === hoveredRegionSlug)
   const hoveredCount = hoveredRegion ? regionArtworkCounts[hoveredRegion.slug] : undefined
+
+  function updateTooltipPosition(path: SVGPathElement | null) {
+    const mapElement = mapRef.current
+    if (!mapElement || !path) {
+      setTooltipPosition(null)
+      return
+    }
+
+    const pathBox = path.getBBox()
+    const viewBox = mapElement.viewBox.baseVal
+    const xPercent = ((pathBox.x + pathBox.width / 2) / (viewBox.width || 1)) * 100
+    const yPercent = ((pathBox.y + pathBox.height / 2) / (viewBox.height || 1)) * 100
+
+    setTooltipPosition({ x: xPercent, y: yPercent })
+  }
 
   useEffect(() => {
     const mapElement = mapRef.current
@@ -90,24 +106,32 @@ export function WorldMap({
       const path = getRegionPath(event.target)
       const region = ARTWORK_REGIONS.find((entry) => entry.slug === path?.dataset.region)
       setHoveredRegionSlug(region?.slug)
+      updateTooltipPosition(path)
     }
 
     function handleMapMouseOut(event: MouseEvent) {
       const path = getRegionPath(event.relatedTarget)
       const region = ARTWORK_REGIONS.find((entry) => entry.slug === path?.dataset.region)
       setHoveredRegionSlug(region?.slug)
+      if (!path) {
+        setTooltipPosition(null)
+      }
     }
 
     function handleMapFocusIn(event: FocusEvent) {
       const path = getRegionPath(event.target)
       const region = ARTWORK_REGIONS.find((entry) => entry.slug === path?.dataset.region)
       setHoveredRegionSlug(region?.slug)
+      updateTooltipPosition(path)
     }
 
     function handleMapFocusOut(event: FocusEvent) {
       const path = getRegionPath(event.relatedTarget)
       const region = ARTWORK_REGIONS.find((entry) => entry.slug === path?.dataset.region)
       setHoveredRegionSlug(region?.slug)
+      if (!path) {
+        setTooltipPosition(null)
+      }
     }
 
     mapElement.addEventListener('click', handleMapClick)
@@ -137,8 +161,16 @@ export function WorldMap({
         viewBox={mapViewBox}
         dangerouslySetInnerHTML={{ __html: mapContents }}
       />
-      {hoveredRegion && (
-        <div className={styles.regionTooltip} id="continent-region-tooltip" role="tooltip">
+      {hoveredRegion && tooltipPosition && (
+        <div
+          className={styles.regionTooltip}
+          id="continent-region-tooltip"
+          role="tooltip"
+          style={{
+            left: `${tooltipPosition.x}%`,
+            top: `${tooltipPosition.y}%`,
+          }}
+        >
           <strong>{hoveredRegion.label}</strong>
           <span>
             {hoveredCount !== undefined
