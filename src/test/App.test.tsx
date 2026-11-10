@@ -27,7 +27,7 @@ describe('application routes', () => {
     const discoveryNavigation = screen.getByRole('navigation', { name: 'Explore the collection' })
     const discoveryLinks = within(discoveryNavigation).getAllByRole('link')
     expect(discoveryLinks).toHaveLength(4)
-    expect(discoveryLinks[0].getAttribute('style')).toContain('/bg_home_buttons/by-categories.jpg')
+    expect(discoveryLinks[0].getAttribute('style')).toContain('/bg_home_buttons/by-departments.jpg')
     expect(discoveryLinks[1].getAttribute('style')).toContain('/bg_home_buttons/by-continents.jpg')
     expect(discoveryLinks[2].getAttribute('style')).toContain('/bg_home_buttons/by-chronology.jpg')
     expect(discoveryLinks[3].getAttribute('style')).toContain('/bg_home_buttons/by-statistics.jpg')
@@ -52,7 +52,7 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
-  it('opens All objects with the selected category filters', async () => {
+  it('opens All objects with the selected department filter', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
       const body = url.pathname.endsWith('/departments')
@@ -64,10 +64,10 @@ describe('application routes', () => {
       return createResponse(body)
     })
     vi.stubGlobal('fetch', fetchMock)
-    window.history.replaceState(null, '', '/categories')
+    window.history.replaceState(null, '', '/departments')
     render(<App />)
 
-    fireEvent.click(screen.getByRole('link', { name: 'Browse Van Gogh paintings' }))
+    fireEvent.click(await screen.findByRole('link', { name: 'Browse European Paintings' }))
 
     expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
     await screen.findByRole('link', { name: /Sunflowers/ })
@@ -76,9 +76,7 @@ describe('application routes', () => {
       .map(([input]) => new URL(String(input)))
       .find((url) => url.pathname.endsWith('/search'))
     expect(searchUrl?.searchParams.get('departmentId')).toBe('11')
-    expect(searchUrl?.searchParams.get('q')).toBe('Van Gogh')
-    expect(searchUrl?.searchParams.get('artistOrCulture')).toBe('true')
-    expect(searchUrl?.searchParams.get('hasImages')).toBe('true')
+    expect(searchUrl?.searchParams.has('q')).toBe(false)
   })
 
   it('renders the not-found page for an unknown route', () => {

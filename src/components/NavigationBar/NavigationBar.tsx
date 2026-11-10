@@ -44,8 +44,8 @@ export function NavigationBar() {
             </NavLink>
           </li>
           <li>
-            <NavLink className={styles.navigationLink} onClick={() => setIsMenuOpen(false)} to="/categories">
-              By categories
+            <NavLink className={styles.navigationLink} onClick={() => setIsMenuOpen(false)} to="/departments">
+              By departments
             </NavLink>
           </li>
           <li>

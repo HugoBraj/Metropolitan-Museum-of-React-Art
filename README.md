@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for categories, continents, chronology, and statistics. The dedicated continent map shows artwork counts on hover and opens All objects with the selected region prefiltered. The categories page offers image-backed thematic searches that open filtered All objects results; dynamic search suggestions, artwork details, chronology, and charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for departments, continents, chronology, and statistics. The dedicated continent map shows artwork counts on hover and opens All objects with the selected region prefiltered. The departments page loads the museum's official departments and opens filtered All objects results; dynamic search suggestions, artwork details, chronology, and charts are still planned.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the home and not-found routes, category-to-results filters, discovery-link descriptions, collection filters and sorting, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
+The test suite covers the home and not-found routes, department-to-results filters, discovery-link descriptions, collection filters and sorting, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
 
 ## Current structure
 
@@ -41,7 +41,7 @@ The test suite covers the home and not-found routes, category-to-results filters
 - `src/pages/HomePage` renders a flexible introduction above four responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the viewport-filling interactive map and routes selections to filtered collection results.
 - `src/pages/RegionCollectionPage` loads the selected region's artwork list.
 - `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters with paginated artwork results. Date sorting applies to the current page.
-- `src/pages/CategoriesPage` renders image-backed thematic searches; `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, and `src/pages/SearchPage` remain route placeholders.
+- `src/pages/DepartmentsPage` loads the official museum departments and renders image-backed links to filtered collection results. `src/pages/ChronologyPage`, `src/pages/StatisticsPage`, and `src/pages/SearchPage` remain route placeholders.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search, department-list, and object-detail requests.
@@ -54,7 +54,7 @@ The test suite covers the home and not-found routes, category-to-results filters
 ## Planned features
 
 - Connect search submission to the Met API and add dynamic artwork suggestions in the navigation.
-- Expand curated category exploration and implement chronology exploration.
+- Implement chronology exploration.
 - Show artwork metadata on the object detail route.
 - Add a chart based on a bounded sample of returned collection objects.
 
