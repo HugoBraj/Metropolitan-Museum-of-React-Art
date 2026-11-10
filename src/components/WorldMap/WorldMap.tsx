@@ -36,8 +36,17 @@ export function WorldMap({
       return
     }
 
+    if (typeof path.getBBox !== 'function') {
+      setTooltipPosition({ x: 50, y: 80 })
+      return
+    }
+
     const pathBox = path.getBBox()
     const viewBox = mapElement.viewBox.baseVal
+    if (viewBox.width === 0 || viewBox.height === 0) {
+      setTooltipPosition({ x: 50, y: 80 })
+      return
+    }
     const xPercent = ((pathBox.x + pathBox.width / 2) / (viewBox.width || 1)) * 100
     const yPercent = ((pathBox.y + pathBox.height / 2) / (viewBox.height || 1)) * 100
 
