@@ -3,10 +3,10 @@ import styles from './HomePage.module.css'
 
 const DISCOVERY_LINKS = [
   {
-    id: 'categories',
-    label: 'By categories',
-    href: '/categories',
-    image: '/bg_home_buttons/by-categories.jpg',
+    id: 'departments',
+    label: 'By departments',
+    href: '/departments',
+    image: '/bg_home_buttons/by-departments.jpg',
     description: 'Browse the collection by department and medium.',
   },
   {
@@ -39,7 +39,7 @@ export function HomePage() {
         <div className={styles.heroCopy}>
           <h1 className={styles.pageTitle} id="home-heading">Explore the collection.</h1>
           <p className={styles.heroDescription}>
-            Browse objects through categories, geography, or time.
+            Browse objects by museum department, geography, or time.
           </p>
           <Link className={styles.primaryAction} to="/collection">Start exploring</Link>
         </div>
