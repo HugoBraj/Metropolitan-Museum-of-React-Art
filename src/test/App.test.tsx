@@ -52,6 +52,35 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
+  it('opens All objects with the selected category filters', async () => {
+    const fetchMock = vi.fn<typeof fetch>(async (input) => {
+      const url = new URL(String(input))
+      const body = url.pathname.endsWith('/departments')
+        ? { departments: [{ departmentId: 11, displayName: 'European Paintings' }] }
+        : url.pathname.endsWith('/search')
+          ? { total: 1, objectIDs: [436524] }
+          : { objectID: 436524, title: 'Sunflowers', artistDisplayName: 'Vincent van Gogh' }
+
+      return createResponse(body)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    window.history.replaceState(null, '', '/categories')
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('link', { name: 'Browse Van Gogh paintings' }))
+
+    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
+    await screen.findByRole('link', { name: /Sunflowers/ })
+
+    const searchUrl = fetchMock.mock.calls
+      .map(([input]) => new URL(String(input)))
+      .find((url) => url.pathname.endsWith('/search'))
+    expect(searchUrl?.searchParams.get('departmentId')).toBe('11')
+    expect(searchUrl?.searchParams.get('q')).toBe('Van Gogh')
+    expect(searchUrl?.searchParams.get('artistOrCulture')).toBe('true')
+    expect(searchUrl?.searchParams.get('hasImages')).toBe('true')
+  })
+
   it('renders the not-found page for an unknown route', () => {
     window.history.replaceState(null, '', '/unknown')
 
@@ -60,7 +89,7 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'Page not found' })).toBeTruthy()
   })
 
-  it('renders the collection and artwork routes', () => {
+  it('renders the collection and artwork routes', async () => {
     vi.stubGlobal('fetch', vi.fn(async (input) => {
       const url = new URL(String(input))
       if (url.pathname.endsWith('/departments')) {
@@ -81,7 +110,7 @@ describe('application routes', () => {
     window.history.replaceState(null, '', '/objects/45734')
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'Artwork page' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'Untitled artwork' })).toBeTruthy()
   })
 
   it('opens the mobile navigation and submits a search to its route', () => {
