@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
+import { Loader } from '../../components/Loader/Loader'
 import { findArtworkRegion } from '../../constants/artworkRegions'
 import { useRegionArtworks } from '../../hooks/useRegionArtworks'
 import styles from './RegionCollectionPage.module.css'
@@ -26,7 +27,7 @@ export function RegionCollectionPage() {
         <h1 className={styles.pageTitle}>{region.label}</h1>
       </header>
 
-      {artworksQuery.isPending && <p aria-live="polite">Loading artworks...</p>}
+      {artworksQuery.isPending && <Loader text="Loading artworks..." />}
       {artworksQuery.isError && (
         <section aria-live="polite" className={styles.message}>
           <p>Artworks could not be loaded.</p>

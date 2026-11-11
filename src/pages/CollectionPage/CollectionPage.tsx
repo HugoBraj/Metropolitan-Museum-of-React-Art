@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { FilterX } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
+import { Loader } from '../../components/Loader/Loader'
 import { MAX_SEARCH_WINDOW } from '../../api/metMuseumClient'
 import type { SearchObjectsParams } from '../../api/metMuseumClient'
 import { findArtworkRegion } from '../../constants/artworkRegions'
@@ -231,7 +232,7 @@ export function CollectionPage() {
       </form>
 
       <section aria-label="Collection results" className={styles.resultsSection}>
-        {artworksQuery.isPending && <p aria-live="polite">Loading artworks...</p>}
+        { <Loader text="Loading artworks..." />}
         {artworksQuery.isError && (
           <div aria-live="polite" className={styles.statusMessage}>
             <p>Artworks could not be loaded.</p>

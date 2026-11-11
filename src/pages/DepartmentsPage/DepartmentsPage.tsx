@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Loader } from '../../components/Loader/Loader'
 import { useDepartments } from '../../hooks/useDepartments'
 import styles from './DepartmentsPage.module.css'
 
@@ -36,7 +37,7 @@ export function DepartmentsPage() {
         </p>
       </header>
 
-      {departmentsQuery.isPending && <p aria-live="polite">Loading departments...</p>}
+      {departmentsQuery.isPending && <Loader text="Loading departments..." />}
       {departmentsQuery.isError && (
         <p aria-live="polite" className={styles.statusMessage}>
           Departments could not be loaded. Please try again later.

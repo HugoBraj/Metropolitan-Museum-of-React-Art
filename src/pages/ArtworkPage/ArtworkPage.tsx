@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Loader } from '../../components/Loader/Loader'
 import { useArtwork } from '../../hooks/useArtwork'
 import styles from './ArtworkPage.module.css'
 
@@ -21,7 +22,7 @@ export function ArtworkPage() {
   if (artworkQuery.isLoading) {
     return (
       <main className={styles.page}>
-        <div className={styles.loadingState}>Loading artwork...</div>
+        <Loader text="Loading artwork..." />
       </main>
     )
   }

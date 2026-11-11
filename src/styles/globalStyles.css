@@ -7,6 +7,7 @@
   --color-text-muted: #69655f;
   --color-primary: #e4002b;
   --color-primary-hover: #c90026;
+  --color-loader: var(--color-primary);
   --color-accent: #9c8062;
   --color-border: #e5dfd5;
   --color-preview-overlay-light: rgb(36 35 33 / 8%);
