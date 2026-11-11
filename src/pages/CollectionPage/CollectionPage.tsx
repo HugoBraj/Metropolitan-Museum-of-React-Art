@@ -232,7 +232,7 @@ export function CollectionPage() {
       </form>
 
       <section aria-label="Collection results" className={styles.resultsSection}>
-        { <Loader text="Loading artworks..." />}
+        {artworksQuery.isPending && <Loader text="Loading artworks..." />}
         {artworksQuery.isError && (
           <div aria-live="polite" className={styles.statusMessage}>
             <p>Artworks could not be loaded.</p>
