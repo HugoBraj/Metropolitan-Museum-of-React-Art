@@ -17,13 +17,6 @@ const DISCOVERY_LINKS = [
     description: 'Explore artworks connected to six world regions.',
   },
   {
-    id: 'chronology',
-    label: 'By chronology',
-    href: '/chronology',
-    image: '/bg_home_buttons/by-chronology.jpg',
-    description: 'Follow art across centuries and movements.',
-  },
-  {
     id: 'statistics',
     label: 'See statistics',
     href: '/statistics',
@@ -39,7 +32,7 @@ export function HomePage() {
         <div className={styles.heroCopy}>
           <h1 className={styles.pageTitle} id="home-heading">Explore the collection.</h1>
           <p className={styles.heroDescription}>
-            Browse objects by museum department, geography, or time.
+            Browse objects by museum department or geography.
           </p>
           <Link className={styles.primaryAction} to="/collection">Start exploring</Link>
         </div>

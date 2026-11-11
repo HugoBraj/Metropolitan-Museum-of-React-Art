@@ -26,11 +26,10 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'Explore the collection.' })).toBeTruthy()
     const discoveryNavigation = screen.getByRole('navigation', { name: 'Explore the collection' })
     const discoveryLinks = within(discoveryNavigation).getAllByRole('link')
-    expect(discoveryLinks).toHaveLength(4)
+    expect(discoveryLinks).toHaveLength(3)
     expect(discoveryLinks[0].getAttribute('style')).toContain('/bg_home_buttons/by-departments.jpg')
     expect(discoveryLinks[1].getAttribute('style')).toContain('/bg_home_buttons/by-continents.jpg')
-    expect(discoveryLinks[2].getAttribute('style')).toContain('/bg_home_buttons/by-chronology.jpg')
-    expect(discoveryLinks[3].getAttribute('style')).toContain('/bg_home_buttons/by-statistics.jpg')
+    expect(discoveryLinks[2].getAttribute('style')).toContain('/bg_home_buttons/by-statistics.jpg')
     expect(screen.getByText('Browse the collection by department and medium.')).toBeTruthy()
     expect(screen.queryByText('Featured collection')).toBeNull()
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeTruthy()
@@ -82,6 +81,13 @@ describe('application routes', () => {
   it('renders the not-found page for an unknown route', () => {
     window.history.replaceState(null, '', '/unknown')
 
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'Page not found' })).toBeTruthy()
+  })
+
+  it.each(['/search', '/chronology'])('renders not found for the removed route %s', (route) => {
+    window.history.replaceState(null, '', route)
     render(<App />)
 
     expect(screen.getByRole('heading', { name: 'Page not found' })).toBeTruthy()
