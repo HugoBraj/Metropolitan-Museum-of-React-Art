@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import continentMapSource from '../../assets/continentsLow.svg?raw'
+import { Loader } from '../Loader/Loader'
 import { ARTWORK_REGIONS } from '../../constants/artworkRegions'
 import type { ArtworkRegionSlug } from '../../constants/artworkRegions'
 import type { RegionArtworkCounts } from '../../hooks/useRegionArtworkCounts'
@@ -187,7 +188,7 @@ export function WorldMap({
               : isRegionCountError
                 ? 'Artwork count unavailable'
                 : isRegionCountLoading
-                  ? 'Loading artwork count...'
+                  ? <Loader size="compact" text="Loading artwork count..." />
                   : 'Artwork count unavailable'}
           </span>
         </div>

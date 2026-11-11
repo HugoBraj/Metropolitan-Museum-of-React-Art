@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the home and not-found routes, department-to-results filters, discovery-link descriptions, collection filters and sorting, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
+The test suite covers the shared loader, home and not-found routes, department-to-results filters, discovery-link descriptions, collection filters and sorting, navigation to the dedicated continent map, the Met API client, and its React Query hooks.
 
 ## Current structure
 
@@ -38,6 +38,7 @@ The test suite covers the home and not-found routes, department-to-results filte
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible, with cached per-continent result counts.
 - `src/components/RoutePlaceholder` renders the simple chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
+- `src/components/Loader` provides a shared accessible animated loading indicator, with a compact variant for the map tooltip.
 - `src/pages/HomePage` renders a flexible introduction above four responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the viewport-filling interactive map and routes selections to filtered collection results.
 - `src/pages/RegionCollectionPage` loads the selected region's artwork list.
 - `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters with paginated artwork results. Date sorting applies to the current page.
