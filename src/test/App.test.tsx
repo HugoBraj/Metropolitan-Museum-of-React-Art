@@ -111,7 +111,13 @@ describe('application routes', () => {
     expect(await screen.findByRole('heading', { name: 'Untitled artwork' })).toBeTruthy()
   })
 
-  it('opens the mobile navigation and submits a search to its route', () => {
+  it('opens the mobile navigation and submits a search to All objects', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      return createResponse(url.pathname.endsWith('/departments')
+        ? { departments: [] }
+        : { total: 0, objectIDs: [] })
+    }))
     render(<App />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
@@ -120,11 +126,131 @@ describe('application routes', () => {
     expect(navigationToggle.getAttribute('aria-expanded')).toBe('true')
 
     fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    expect(screen.getByRole('button', { name: 'Open navigation' }).getAttribute('aria-expanded')).toBe('false')
+    expect(screen.queryByRole('button', { name: 'Dismiss navigation overlay' })).toBeNull()
     fireEvent.change(screen.getByRole('searchbox', { name: 'Search artworks' }), {
       target: { value: 'blue flowers' },
     })
     fireEvent.click(screen.getByRole('button', { name: 'Submit artwork search' }))
 
-    expect(screen.getByRole('heading', { name: 'Search page' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
+    expect(new URLSearchParams(window.location.search).get('q')).toBe('blue flowers')
+  })
+
+  it('switches between search and the mobile menu without overlapping panels', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search artworks' }), {
+      target: { value: 'art' },
+    })
+    expect(screen.getByRole('button', { name: 'Close search' }).querySelector('.lucide-search')).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'Clear search' })).toBeTruthy()
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Open navigation' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
+    expect(screen.queryByRole('searchbox', { name: 'Search artworks' })).toBeNull()
+    expect(screen.getByRole('button', { name: 'Close navigation' }).getAttribute('aria-expanded')).toBe('true')
+    expect(screen.getByRole('button', { name: 'Open search' }).getAttribute('aria-expanded')).toBe('false')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    expect(screen.queryByRole('button', { name: 'Dismiss navigation overlay' })).toBeNull()
+    expect(screen.getByRole('button', { name: 'Open navigation' }).getAttribute('aria-expanded')).toBe('false')
+    expect((screen.getByRole('searchbox', { name: 'Search artworks' }) as HTMLInputElement).value).toBe('')
+  })
+
+  it('closes the menu and search with Escape and restores focus', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open navigation' }))
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Close navigation' }), { key: 'Escape' })
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Open navigation' }))
+    expect(screen.queryByRole('button', { name: 'Dismiss navigation overlay' })).toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    fireEvent.keyDown(screen.getByRole('searchbox', { name: 'Search artworks' }), { key: 'Escape' })
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Open search' }))
+    expect(screen.queryByRole('searchbox', { name: 'Search artworks' })).toBeNull()
+  })
+
+  it('closes search on an outside click without blocking the clicked page link', () => {
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      return createResponse(url.pathname.endsWith('/departments')
+        ? { departments: [] }
+        : { total: 0, objectIDs: [] })
+    }))
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    const searchInput = screen.getByRole('searchbox', { name: 'Search artworks' })
+    fireEvent.change(searchInput, { target: { value: 'art' } })
+    fireEvent.pointerDown(searchInput)
+    expect(screen.getByRole('searchbox', { name: 'Search artworks' })).toBeTruthy()
+
+    const closeToggle = screen.getByRole('button', { name: 'Close search' })
+    fireEvent.pointerDown(closeToggle)
+    expect(screen.getByRole('button', { name: 'Close search' })).toBeTruthy()
+
+    const collectionLink = screen.getByRole('link', { name: 'Start exploring' })
+    fireEvent.pointerDown(collectionLink)
+    fireEvent.click(collectionLink)
+    expect(screen.queryByRole('searchbox', { name: 'Search artworks' })).toBeNull()
+    expect(window.location.pathname).toBe('/collection')
+  })
+
+  it('shows suggestions, clears the input, and opens an artwork', async () => {
+    const fetchMock = vi.fn<typeof fetch>(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 2, objectIDs: [901, 902] })
+      }
+      const objectID = Number(url.pathname.split('/').at(-1))
+      return createResponse({ objectID, title: objectID === 901 ? 'Moonlit garden' : '', artistDisplayName: '' })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    const searchInput = screen.getByRole('searchbox', { name: 'Search artworks' })
+    fireEvent.change(searchInput, { target: { value: 'moon' } })
+
+    expect(await screen.findByRole('link', { name: /Moonlit garden/ })).toBeTruthy()
+    expect(screen.getByRole('link', { name: /Untitled artwork/ })).toBeTruthy()
+    expect(screen.getAllByText('Artist unknown')).toHaveLength(2)
+
+    const clearButton = screen.getByRole('button', { name: 'Clear search' })
+    expect(clearButton.querySelector('svg')).not.toBeNull()
+    fireEvent.click(clearButton)
+    expect((searchInput as HTMLInputElement).value).toBe('')
+    expect(screen.queryByRole('region', { name: 'Artwork suggestions' })).toBeNull()
+
+    fireEvent.change(searchInput, { target: { value: 'moon' } })
+    const artworkSuggestion = await screen.findByRole('link', { name: /Moonlit garden/ })
+    fireEvent.pointerDown(artworkSuggestion)
+    expect(screen.getByRole('searchbox', { name: 'Search artworks' })).toBeTruthy()
+    fireEvent.click(artworkSuggestion)
+    expect(await screen.findByRole('heading', { name: 'Moonlit garden' })).toBeTruthy()
+    expect(window.location.pathname).toBe('/objects/901')
+  })
+
+  it('handles an empty suggestion list and submits the search form', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      return createResponse(url.pathname.endsWith('/departments')
+        ? { departments: [] }
+        : { total: 0, objectIDs: null })
+    }))
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search artworks' }), {
+      target: { value: 'no matches' },
+    })
+    expect(await screen.findByText('No artworks found.')).toBeTruthy()
+
+    fireEvent.submit(screen.getByRole('search'))
+    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
+    expect(new URLSearchParams(window.location.search).get('q')).toBe('no matches')
   })
 })

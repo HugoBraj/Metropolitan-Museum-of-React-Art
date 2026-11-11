@@ -4,6 +4,7 @@ import type { PropsWithChildren } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useArtwork } from '../hooks/useArtwork'
 import { useArtworkSearch } from '../hooks/useArtworkSearch'
+import { useArtworkSuggestions } from '../hooks/useArtworkSuggestions'
 import { useCollectionArtworks } from '../hooks/useCollectionArtworks'
 import { useDepartments } from '../hooks/useDepartments'
 
@@ -48,6 +49,32 @@ describe('collection data hooks', () => {
 
     expect(result.current.data).toEqual({ total: 1, objectIDs: [45734] })
     expect(fetchMock).toHaveBeenCalledOnce()
+  })
+
+  it('debounces suggestion searches and fetches at most eight object details', async () => {
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 10, objectIDs: [1, 2, 3, 4, 5, 6, 7, 8, 9] })
+      }
+      return createResponse({ objectID: Number(url.pathname.split('/').at(-1)), title: 'Artwork' })
+    })
+
+    const { result, rerender } = renderHook(({ term }) => useArtworkSuggestions(term), {
+      initialProps: { term: 'c' },
+      wrapper: createQueryWrapper(),
+    })
+    rerender({ term: 'cat' })
+
+    await waitFor(() => expect(result.current.isReady).toBe(true))
+    expect(result.current.suggestions).toHaveLength(8)
+    expect(fetchMock).toHaveBeenCalledTimes(9)
+    const searchUrl = new URL(String(fetchMock.mock.calls[0][0]))
+    expect(searchUrl.searchParams.get('q')).toBe('cat')
+    expect(searchUrl.searchParams.get('limit')).toBe('8')
+
+    rerender({ term: '' })
+    expect(result.current.suggestions).toEqual([])
   })
 
   it('fetches an artwork detail through the query hook', async () => {
