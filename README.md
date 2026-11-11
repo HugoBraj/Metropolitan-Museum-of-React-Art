@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for departments, continents, chronology, and statistics. The dedicated continent map shows artwork counts on hover and opens All objects with the selected region prefiltered. The departments page loads the museum's official departments and opens filtered All objects results; dynamic search suggestions, artwork details, chronology, and charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with four image-backed links for departments, continents, chronology, and statistics. The dedicated continent map shows artwork counts on hover and opens All objects with the selected region prefiltered. The departments page loads the museum's official departments and opens filtered All objects results. Navigation search offers artwork suggestions; chronology and charts are still planned.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ The test suite covers the shared loader, home and not-found routes, department-t
 
 - `src/App.tsx` defines the routes and router.
 - `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`.
-- `src/components/NavigationBar` contains the responsive museum navigation and a search form that routes to the search placeholder.
+- `src/components/NavigationBar` contains responsive navigation and artwork search: submit to All objects or select a suggestion to open its detail page.
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible, with cached per-continent result counts.
 - `src/components/RoutePlaceholder` renders the simple chronology, statistics, collection, search, and artwork pages.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
@@ -47,6 +47,7 @@ The test suite covers the shared loader, home and not-found routes, department-t
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search, department-list, and object-detail requests.
 - `src/hooks/useArtworkSearch.ts` and `src/hooks/useArtwork.ts` provide cached search and object-detail queries.
+- `src/hooks/useArtworkSuggestions.ts` debounces navigation searches by 300 ms after two characters and loads at most eight object details.
 - `src/hooks/useDepartments.ts` caches department options; `src/hooks/useCollectionArtworks.ts` pages search IDs and hydrates a bounded set of object records.
 - `src/hooks/useRegionArtworks.ts` runs bounded regional searches and hydrates a maximum of 12 object records.
 - `src/constants/artworkRegions.ts` maps map-path IDs and route slugs to API geographic terms.
@@ -54,7 +55,6 @@ The test suite covers the shared loader, home and not-found routes, department-t
 
 ## Planned features
 
-- Connect search submission to the Met API and add dynamic artwork suggestions in the navigation.
 - Implement chronology exploration.
 - Show artwork metadata on the object detail route.
 - Add a chart based on a bounded sample of returned collection objects.
