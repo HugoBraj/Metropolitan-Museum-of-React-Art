@@ -5,11 +5,9 @@ import { ArtworkPage } from './pages/ArtworkPage/ArtworkPage'
 import { CollectionPage } from './pages/CollectionPage/CollectionPage'
 import { DepartmentsPage } from './pages/DepartmentsPage/DepartmentsPage'
 import { ContinentsPage } from './pages/ContinentsPage/ContinentsPage'
-import { ChronologyPage } from './pages/ChronologyPage/ChronologyPage'
 import { HomePage } from './pages/HomePage/HomePage'
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage'
 import { RegionCollectionPage } from './pages/RegionCollectionPage/RegionCollectionPage'
-import { SearchPage } from './pages/SearchPage/SearchPage'
 import { StatisticsPage } from './pages/StatisticsPage/StatisticsPage'
 
 const queryClient = new QueryClient()
@@ -25,9 +23,7 @@ export function App() {
             <Route path="collection/:region" element={<RegionCollectionPage />} />
             <Route path="departments" element={<DepartmentsPage />} />
             <Route path="continents" element={<ContinentsPage />} />
-            <Route path="chronology" element={<ChronologyPage />} />
             <Route path="statistics" element={<StatisticsPage />} />
-            <Route path="search" element={<SearchPage />} />
             <Route path="objects/:objectId" element={<ArtworkPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

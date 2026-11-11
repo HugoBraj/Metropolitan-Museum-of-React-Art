@@ -119,11 +119,6 @@ export function NavigationBar({ searchTerm, onSearchTermChange, searchResults }:
             </NavLink>
           </li>
           <li>
-            <NavLink className={styles.navigationLink} onClick={() => setIsMenuOpen(false)} to="/chronology">
-              By chronology
-            </NavLink>
-          </li>
-          <li>
             <NavLink className={styles.navigationLink} onClick={() => setIsMenuOpen(false)} to="/statistics">
               Statistics
             </NavLink>
