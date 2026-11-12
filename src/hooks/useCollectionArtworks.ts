@@ -9,6 +9,7 @@ export const COLLECTION_PAGE_SIZE = 12
 
 export interface CollectionArtworkPage extends ObjectSearchResponse {
   artworks: MetObject[]
+  failedGeoLocations?: string[]
 }
 
 export function useCollectionArtworks(
@@ -23,12 +24,13 @@ export function useCollectionArtworks(
     queryKey: ['metMuseum', 'collection', params, page, regionSlug],
     queryFn: async ({ signal }) => {
       let results: ObjectSearchResponse
+      const failedGeoLocations: string[] = []
 
       if (region) {
         const perLocationLimit = Math.ceil(COLLECTION_PAGE_SIZE / region.geoLocations.length)
         const offset = page * perLocationLimit
         const limit = Math.min(perLocationLimit, MAX_SEARCH_WINDOW - offset)
-        const locationResults = await Promise.all(
+        const locationSearches = await Promise.allSettled(
           region.geoLocations.map((geoLocation) =>
             searchObjects({
               ...params,
@@ -38,6 +40,29 @@ export function useCollectionArtworks(
             }, signal),
           ),
         )
+        if (signal.aborted) {
+          throw signal.reason
+        }
+
+        const locationResults = locationSearches.flatMap((searchResult, index) => {
+          if (searchResult.status === 'fulfilled') {
+            return [searchResult.value]
+          }
+
+          const geoLocation = region.geoLocations[index]
+          if (geoLocation) {
+            failedGeoLocations.push(geoLocation)
+          }
+          return []
+        })
+
+        if (locationResults.length === 0) {
+          const firstFailure = locationSearches.find((searchResult) => searchResult.status === 'rejected')
+          if (firstFailure?.status === 'rejected') {
+            throw firstFailure.reason
+          }
+        }
+
         results = {
           total: locationResults.reduce((total, locationResult) => total + locationResult.total, 0),
           objectIDs: [...new Set(locationResults.flatMap((locationResult) => locationResult.objectIDs))]
@@ -59,7 +84,7 @@ export function useCollectionArtworks(
         ),
       )
 
-      return { ...results, artworks }
+      return { ...results, artworks, failedGeoLocations }
     },
   })
 }

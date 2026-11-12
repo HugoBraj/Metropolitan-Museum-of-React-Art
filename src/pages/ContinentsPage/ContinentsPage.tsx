@@ -10,7 +10,7 @@ import styles from './ContinentsPage.module.css'
 export function ContinentsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const region = findArtworkRegion(searchParams.get('region') ?? undefined)
-  const { counts, isLoading: isRegionCountLoading, isError: isRegionCountError } = useRegionArtworkCounts()
+  const { counts, isLoading: isRegionCountLoading, isError: isRegionCountError } = useRegionArtworkCounts(!region)
 
   function handleSelectRegion(region: ArtworkRegionSlug) {
     setSearchParams(new URLSearchParams({ region }))

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../App'
 
@@ -146,6 +146,75 @@ describe('application routes', () => {
     expect(await screen.findByRole('heading', { name: 'Quail and Millet' })).toBeTruthy()
     expect(within(breadcrumb).getByRole('link', { name: 'All objects' }).getAttribute('href'))
       .toBe('/collection?q=quail')
+  })
+
+  it('tries additional images when the primary image URLs fail in the results grid', async () => {
+    const objectId = 9876543
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/departments')) {
+        return createResponse({ departments: [] })
+      }
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 1, objectIDs: [objectId] })
+      }
+      return createResponse({
+        objectID: objectId,
+        title: 'Image fallback test',
+        primaryImageSmall: 'https://images.example/primary-small.jpg',
+        primaryImage: 'https://images.example/primary.jpg',
+        additionalImages: ['https://images.example/detail.jpg'],
+      })
+    }))
+    window.history.replaceState(null, '', '/collection')
+    render(<App />)
+
+    const image = await screen.findByRole('img', { name: 'Image fallback test' })
+    expect(image.getAttribute('src')).toBe('https://images.example/primary-small.jpg')
+
+    fireEvent.error(image)
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Image fallback test' }).getAttribute('src'))
+        .toBe('https://images.example/primary.jpg')
+    })
+
+    fireEvent.error(screen.getByRole('img', { name: 'Image fallback test' }))
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Image fallback test' }).getAttribute('src'))
+        .toBe('https://images.example/detail.jpg')
+    })
+
+    fireEvent.error(screen.getByRole('img', { name: 'Image fallback test' }))
+    expect(await screen.findByRole('img', { name: 'No image available for Image fallback test' }))
+      .toBeTruthy()
+  })
+
+  it('tries additional images when the primary image URLs fail on an artwork page', async () => {
+    const objectId = 9876544
+    vi.stubGlobal('fetch', vi.fn(async () => createResponse({
+      objectID: objectId,
+      title: 'Artwork detail fallback test',
+      primaryImage: 'https://images.example/detail-primary.jpg',
+      primaryImageSmall: 'https://images.example/detail-small.jpg',
+      additionalImages: ['https://images.example/detail-alternative.jpg'],
+    })))
+    window.history.replaceState(null, '', `/objects/${objectId}`)
+    render(<App />)
+
+    const image = await screen.findByRole('img', { name: 'Artwork detail fallback test' })
+    expect(image.getAttribute('src')).toBe('https://images.example/detail-primary.jpg')
+
+    fireEvent.error(image)
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Artwork detail fallback test' }).getAttribute('src'))
+        .toBe('https://images.example/detail-small.jpg')
+    })
+
+    fireEvent.error(screen.getByRole('img', { name: 'Artwork detail fallback test' }))
+    await waitFor(() => {
+      expect(screen.getByRole('img', { name: 'Artwork detail fallback test' }).getAttribute('src'))
+        .toBe('https://images.example/detail-alternative.jpg')
+    })
   })
 
   it('opens the mobile navigation and submits a search to All objects', async () => {

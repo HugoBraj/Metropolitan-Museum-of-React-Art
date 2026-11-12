@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
 import type { BreadcrumbItem } from '../../components/Breadcrumbs/Breadcrumbs'
 import { Loader } from '../../components/Loader/Loader'
 import { useArtwork } from '../../hooks/useArtwork'
+import { useArtworkImage } from '../../hooks/useArtworkImage'
 import styles from './ArtworkPage.module.css'
 
 function readText(value: string | null | undefined): string | null {
@@ -20,7 +20,13 @@ export function ArtworkPage() {
   const location = useLocation()
   const parsedObjectId = Number(objectId)
   const artworkQuery = useArtwork(Number.isInteger(parsedObjectId) ? parsedObjectId : undefined)
-  const [imageFailed, setImageFailed] = useState(false)
+  const artwork = artworkQuery.data
+  const { imageUrl, handleImageError } = useArtworkImage(
+    artwork
+      ? [artwork.primaryImage, artwork.primaryImageSmall, ...(artwork.additionalImages ?? [])]
+      : [],
+    parsedObjectId,
+  )
   const routeState = location.state as { breadcrumbItems?: BreadcrumbItem[] } | null
   const breadcrumbItems = routeState?.breadcrumbItems ?? [{ label: 'All objects', to: '/collection' }]
 
@@ -40,8 +46,6 @@ export function ArtworkPage() {
     )
   }
 
-  const artwork = artworkQuery.data
-
   if (!artwork) {
     return (
       <main className={styles.page}>
@@ -50,7 +54,6 @@ export function ArtworkPage() {
     )
   }
 
-  const imageUrl = artwork.primaryImage || artwork.primaryImageSmall
   const title = readText(artwork.title) || 'Untitled artwork'
   const artist = readText(artwork.artistDisplayName) || 'Artist unknown'
   const date = readText(artwork.objectDate)
@@ -123,11 +126,11 @@ export function ArtworkPage() {
           </section>
 
           <aside className={styles.imagePanel} aria-label={`Image of ${title}`}>
-            {imageUrl && !imageFailed ? (
+            {imageUrl ? (
               <img
                 alt={title}
                 className={styles.image}
-                onError={() => setImageFailed(true)}
+                onError={handleImageError}
                 src={imageUrl}
               />
             ) : (

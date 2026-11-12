@@ -71,4 +71,30 @@ describe('WorldMap', () => {
     )
     expect(artworkRequests).toHaveLength(1)
   })
+
+  it('does not request map counts while a continent result list is open', async () => {
+    const fetchMock = vi.fn<typeof fetch>(async (input) => {
+      const url = new URL(String(input))
+      const body = url.pathname.endsWith('/search')
+        ? { total: 0, objectIDs: [] }
+        : { departments: [] }
+
+      return {
+        ok: true,
+        status: 200,
+        json: async () => body,
+      } as Response
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    window.history.replaceState(null, '', '/continents?region=africa')
+    render(<App />)
+
+    await screen.findByText('No objects found')
+
+    const searchCalls = fetchMock.mock.calls.filter(([input]) =>
+      new URL(String(input)).pathname.endsWith('/search'),
+    )
+    expect(searchCalls).toHaveLength(1)
+    expect(new URL(String(searchCalls[0]?.[0])).searchParams.get('geoLocation')).toBe('Africa')
+  })
 })
