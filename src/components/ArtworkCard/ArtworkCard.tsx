@@ -1,20 +1,26 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { MetObject } from '../../api/metMuseumClient'
+import type { BreadcrumbItem } from '../Breadcrumbs/Breadcrumbs'
 import styles from './ArtworkCard.module.css'
 
 interface ArtworkCardProps {
   artwork: MetObject
+  breadcrumbItems?: BreadcrumbItem[]
 }
 
-export function ArtworkCard({ artwork }: ArtworkCardProps) {
+export function ArtworkCard({ artwork, breadcrumbItems }: ArtworkCardProps) {
   const [imageFailed, setImageFailed] = useState(false)
   const imageUrl = artwork.primaryImageSmall || artwork.primaryImage
   const title = artwork.title?.trim() || 'Untitled artwork'
 
   return (
     <article className={styles.artworkCard}>
-      <Link className={styles.artworkLink} to={`/objects/${artwork.objectID}`}>
+      <Link
+        className={styles.artworkLink}
+        state={breadcrumbItems ? { breadcrumbItems } : undefined}
+        to={`/objects/${artwork.objectID}`}
+      >
         <figure className={styles.artworkFigure}>
           {imageUrl && !imageFailed ? (
             <img

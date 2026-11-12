@@ -1,0 +1,36 @@
+.breadcrumbs {
+  margin-bottom: 1.25rem;
+}
+
+.breadcrumbList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  list-style: none;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.breadcrumbItem a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumbItem a:hover,
+.breadcrumbItem a:focus-visible {
+  text-decoration: underline;
+}
+
+.currentItem {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}

@@ -200,56 +200,6 @@
   font-size: 0.78rem;
 }
 
-.resultsToolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.9rem;
-}
-
-.resultCount {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-}
-
-.sortControl {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-muted);
-  font-size: 0.72rem;
-}
-
-.sortControl select {
-  width: auto;
-  min-height: 2rem;
-}
-
-.artworkGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.5rem 1rem;
-}
-
-.statusMessage {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--color-text-muted);
-}
-
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.75rem;
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-}
-
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -265,9 +215,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .artworkGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 620px) {
@@ -292,15 +239,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .resultsToolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .artworkGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 0.75rem;
-  }
 }
 
 @media (max-width: 360px) {

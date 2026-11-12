@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
+import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
+import type { BreadcrumbItem } from '../../components/Breadcrumbs/Breadcrumbs'
 import { Loader } from '../../components/Loader/Loader'
 import { useArtwork } from '../../hooks/useArtwork'
 import styles from './ArtworkPage.module.css'
@@ -15,9 +17,12 @@ function readText(value: string | null | undefined): string | null {
 
 export function ArtworkPage() {
   const { objectId } = useParams()
+  const location = useLocation()
   const parsedObjectId = Number(objectId)
   const artworkQuery = useArtwork(Number.isInteger(parsedObjectId) ? parsedObjectId : undefined)
   const [imageFailed, setImageFailed] = useState(false)
+  const routeState = location.state as { breadcrumbItems?: BreadcrumbItem[] } | null
+  const breadcrumbItems = routeState?.breadcrumbItems ?? [{ label: 'All objects', to: '/collection' }]
 
   if (artworkQuery.isLoading) {
     return (
@@ -64,6 +69,7 @@ export function ArtworkPage() {
 
   return (
     <main className={styles.page}>
+      <Breadcrumbs current={title} items={breadcrumbItems} />
       <article className={styles.artworkLayout}>
         <header className={styles.header}>
           <h1 className={styles.title}>{title}</h1>

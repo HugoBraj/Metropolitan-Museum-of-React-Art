@@ -2,12 +2,9 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { FilterX } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
-import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
-import { Loader } from '../../components/Loader/Loader'
-import { MAX_SEARCH_WINDOW } from '../../api/metMuseumClient'
+import { Results } from '../../components/Results/Results'
 import type { SearchObjectsParams } from '../../api/metMuseumClient'
 import { findArtworkRegion } from '../../constants/artworkRegions'
-import { COLLECTION_PAGE_SIZE, useCollectionArtworks } from '../../hooks/useCollectionArtworks'
 import { useDepartments } from '../../hooks/useDepartments'
 import styles from './CollectionPage.module.css'
 
@@ -41,42 +38,17 @@ function getSearchFilters(searchParams: URLSearchParams): SearchObjectsParams {
   }
 }
 
-function getCreationYear(artwork: { objectBeginDate?: number | null; objectEndDate?: number | null }): number | undefined {
-  return artwork.objectBeginDate ?? artwork.objectEndDate ?? undefined
-}
-
 export function CollectionPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [filterError, setFilterError] = useState('')
   const departmentsQuery = useDepartments()
   const region = findArtworkRegion(searchParams.get('region') ?? undefined)
-  const perLocationPageSize = Math.ceil(COLLECTION_PAGE_SIZE / (region?.geoLocations.length ?? 1))
-  const maximumPage = Math.ceil(MAX_SEARCH_WINDOW / perLocationPageSize) - 1
-  const page = Math.min(Math.max(0, parseInteger(searchParams.get('page')) ?? 0), maximumPage)
   const sortOrder: SortOrder = searchParams.get('sort') === 'date-asc' ? 'date-asc' : 'date-desc'
   const searchFilters = getSearchFilters(searchParams)
   if (region) {
     searchFilters.geoLocation = undefined
   }
-  const artworksQuery = useCollectionArtworks(searchFilters, page, region?.slug)
-  const artworks = artworksQuery.data?.artworks.slice().sort((firstArtwork, secondArtwork) => {
-    const firstYear = getCreationYear(firstArtwork)
-    const secondYear = getCreationYear(secondArtwork)
-
-    if (firstYear === undefined || secondYear === undefined) {
-      return firstYear === secondYear ? 0 : firstYear === undefined ? 1 : -1
-    }
-
-    return sortOrder === 'date-asc' ? firstYear - secondYear : secondYear - firstYear
-  }) ?? []
-  const matchCount = Math.min(artworksQuery.data?.total ?? 0, MAX_SEARCH_WINDOW)
-  const maximumAvailableResults = region
-    ? maximumPage * COLLECTION_PAGE_SIZE
-      + Math.min(COLLECTION_PAGE_SIZE, (MAX_SEARCH_WINDOW - maximumPage * perLocationPageSize) * region.geoLocations.length)
-    : MAX_SEARCH_WINDOW
-  const pageCount = Math.ceil(Math.min(matchCount, maximumAvailableResults) / COLLECTION_PAGE_SIZE)
-  const firstResult = artworks.length > 0 ? page * COLLECTION_PAGE_SIZE + 1 : 0
-  const lastResult = firstResult + artworks.length - 1
+  const collectionHref = searchParams.size > 0 ? `/collection?${searchParams.toString()}` : '/collection'
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -131,22 +103,6 @@ export function CollectionPage() {
   function clearFilters() {
     setFilterError('')
     setSearchParams(new URLSearchParams({ sort: 'date-desc' }))
-  }
-
-  function changePage(nextPage: number) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-    if (nextPage === 0) {
-      nextSearchParams.delete('page')
-    } else {
-      nextSearchParams.set('page', String(nextPage))
-    }
-    setSearchParams(nextSearchParams)
-  }
-
-  function changeSortOrder(nextSortOrder: SortOrder) {
-    const nextSearchParams = new URLSearchParams(searchParams)
-    nextSearchParams.set('sort', nextSortOrder)
-    setSearchParams(nextSearchParams, { replace: true })
   }
 
   return (
@@ -231,51 +187,11 @@ export function CollectionPage() {
         )}
       </form>
 
-      <section aria-label="Collection results" className={styles.resultsSection}>
-        {artworksQuery.isPending && <Loader text="Loading artworks..." />}
-        {artworksQuery.isError && (
-          <div aria-live="polite" className={styles.statusMessage}>
-            <p>Artworks could not be loaded.</p>
-            <button className={styles.clearButton} onClick={() => void artworksQuery.refetch()} type="button">Try again</button>
-          </div>
-        )}
-        {artworksQuery.isSuccess && (
-          <>
-            <div className={styles.resultsToolbar}>
-              <p aria-live="polite" className={styles.resultCount}>
-                {artworks.length === 0
-                  ? 'No objects found'
-                  : `Showing ${firstResult.toLocaleString()}–${lastResult.toLocaleString()} of ${artworksQuery.data.total.toLocaleString()} objects`}
-              </p>
-              <label className={styles.sortControl}>
-                <span>Sort this page by creation date</span>
-                <select onChange={(event) => changeSortOrder(event.target.value as SortOrder)} value={sortOrder}>
-                  <option value="date-desc">Newest first</option>
-                  <option value="date-asc">Oldest first</option>
-                </select>
-              </label>
-            </div>
-
-            {artworksQuery.data.total > MAX_SEARCH_WINDOW && (
-              <p className={styles.filterNotice}>Only the first 10,000 matches are available through the search API. Refine your filters to explore further.</p>
-            )}
-
-            {artworks.length > 0 && (
-              <div className={styles.artworkGrid}>
-                {artworks.map((artwork) => <ArtworkCard artwork={artwork} key={artwork.objectID} />)}
-              </div>
-            )}
-
-            {pageCount > 1 && (
-              <nav aria-label="Collection result pages" className={styles.pagination}>
-                <button className={styles.clearButton} disabled={page === 0} onClick={() => changePage(page - 1)} type="button">Previous</button>
-                <span>Page {page + 1} of {pageCount}</span>
-                <button className={styles.clearButton} disabled={page + 1 >= pageCount} onClick={() => changePage(page + 1)} type="button">Next</button>
-              </nav>
-            )}
-          </>
-        )}
-      </section>
+      <Results
+        breadcrumbItems={[{ label: 'All objects', to: collectionHref }]}
+        criteria={searchFilters}
+        regionSlug={region?.slug}
+      />
     </main>
   )
 }
