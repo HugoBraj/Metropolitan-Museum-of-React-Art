@@ -1,14 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArtworkCard } from '../../components/ArtworkCard/ArtworkCard'
-import { Loader } from '../../components/Loader/Loader'
+import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
+import { Results } from '../../components/Results/Results'
 import { findArtworkRegion } from '../../constants/artworkRegions'
-import { useRegionArtworks } from '../../hooks/useRegionArtworks'
 import styles from './RegionCollectionPage.module.css'
 
 export function RegionCollectionPage() {
   const { region: regionSlug } = useParams()
   const region = findArtworkRegion(regionSlug)
-  const artworksQuery = useRegionArtworks(regionSlug)
 
   if (!region) {
     return (
@@ -21,31 +19,19 @@ export function RegionCollectionPage() {
 
   return (
     <main className={styles.regionPage}>
-      <Link className={styles.backLink} to="/">Back to the world map</Link>
+      <Breadcrumbs current={region.label} items={[{ label: 'By continent', to: '/continents' }]} />
       <header className={styles.pageHeader}>
         <p className={styles.eyebrow}>Explore by continent</p>
         <h1 className={styles.pageTitle}>{region.label}</h1>
       </header>
-
-      {artworksQuery.isPending && <Loader text="Loading artworks..." />}
-      {artworksQuery.isError && (
-        <section aria-live="polite" className={styles.message}>
-          <p>Artworks could not be loaded.</p>
-          <button className={styles.retryButton} onClick={() => void artworksQuery.refetch()} type="button">
-            Try again
-          </button>
-        </section>
-      )}
-      {artworksQuery.isSuccess && artworksQuery.data.length === 0 && (
-        <p>No artworks were found for this continent.</p>
-      )}
-      {artworksQuery.isSuccess && artworksQuery.data.length > 0 && (
-        <section aria-label={`${region.label} artworks`} className={styles.artworkGrid}>
-          {artworksQuery.data.map((artwork) => (
-            <ArtworkCard artwork={artwork} key={artwork.objectID} />
-          ))}
-        </section>
-      )}
+      <Results
+        breadcrumbItems={[
+          { label: 'By continent', to: '/continents' },
+          { label: region.label, to: `/continents?region=${region.slug}` },
+        ]}
+        criteria={{}}
+        regionSlug={region.slug}
+      />
     </main>
   )
 }

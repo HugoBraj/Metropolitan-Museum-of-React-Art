@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from '../App'
 import { WorldMap } from '../components/WorldMap/WorldMap'
@@ -34,14 +34,14 @@ describe('WorldMap', () => {
     expect(screen.getByRole('tooltip').textContent).toContain('427 artworks')
   })
 
-  it('opens All objects with the continent filter applied', async () => {
+  it('shows continent results in place and keeps the continent breadcrumb on an artwork', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
       const body = url.pathname.endsWith('/departments')
         ? { departments: [] }
         : url.pathname.endsWith('/search')
-          ? { total: 1, objectIDs: [45734] }
-          : { objectID: 45734, title: 'Quail and Millet', artistDisplayName: 'Kiyohara Yukinobu' }
+          ? { total: 1, objectIDs: [9876542] }
+          : { objectID: 9876542, title: 'Quail and Millet', artistDisplayName: 'Kiyohara Yukinobu' }
 
       return {
         ok: true,
@@ -55,11 +55,19 @@ describe('WorldMap', () => {
 
     fireEvent.click(screen.getByRole('link', { name: 'Browse Africa artworks' }))
 
-    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'Africa' })).toBeTruthy()
+    expect(window.location.pathname).toBe('/continents')
     expect(window.location.search).toContain('region=africa')
-    await waitFor(() => expect(screen.getByRole('link', { name: /Quail and Millet/ })).toBeTruthy())
+    fireEvent.click(await screen.findByRole('link', { name: /Quail and Millet/ }))
+
+    expect(await screen.findByRole('heading', { name: 'Quail and Millet' })).toBeTruthy()
+    const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb trail' })
+    expect(within(breadcrumb).getByRole('link', { name: 'By continent' }).getAttribute('href'))
+      .toBe('/continents')
+    expect(within(breadcrumb).getByRole('link', { name: 'Africa' }).getAttribute('href'))
+      .toBe('/continents?region=africa')
     const artworkRequests = fetchMock.mock.calls.filter(([input]) =>
-      new URL(String(input)).pathname.endsWith('/objects/45734'),
+      new URL(String(input)).pathname.endsWith('/objects/9876542'),
     )
     expect(artworkRequests).toHaveLength(1)
   })

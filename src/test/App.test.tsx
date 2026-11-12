@@ -51,7 +51,7 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
-  it('opens All objects with the selected department filter', async () => {
+  it('shows department results in place and keeps the department breadcrumb on an artwork', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
       const body = url.pathname.endsWith('/departments')
@@ -68,8 +68,17 @@ describe('application routes', () => {
 
     fireEvent.click(await screen.findByRole('link', { name: 'Browse European Paintings' }))
 
-    expect(await screen.findByRole('heading', { name: 'All objects' })).toBeTruthy()
-    await screen.findByRole('link', { name: /Sunflowers/ })
+    expect(await screen.findByRole('heading', { name: 'European Paintings' })).toBeTruthy()
+    expect(window.location.pathname).toBe('/departments')
+    expect(new URLSearchParams(window.location.search).get('departmentId')).toBe('11')
+    fireEvent.click(await screen.findByRole('link', { name: /Sunflowers/ }))
+
+    expect(await screen.findByRole('heading', { name: 'Sunflowers' })).toBeTruthy()
+    const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb trail' })
+    expect(within(breadcrumb).getByRole('link', { name: 'By department' }).getAttribute('href'))
+      .toBe('/departments')
+    expect(within(breadcrumb).getByRole('link', { name: 'European Paintings' }).getAttribute('href'))
+      .toBe('/departments?departmentId=11')
 
     const searchUrl = fetchMock.mock.calls
       .map(([input]) => new URL(String(input)))
@@ -115,6 +124,28 @@ describe('application routes', () => {
     render(<App />)
 
     expect(await screen.findByRole('heading', { name: 'Untitled artwork' })).toBeTruthy()
+  })
+
+  it('keeps the All objects route in the artwork breadcrumb', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/departments')) {
+        return createResponse({ departments: [] })
+      }
+      if (url.pathname.endsWith('/search')) {
+        return createResponse({ total: 1, objectIDs: [9876541] })
+      }
+      return createResponse({ objectID: 9876541, title: 'Quail and Millet' })
+    }))
+    window.history.replaceState(null, '', '/collection?q=quail')
+    render(<App />)
+
+    fireEvent.click(await screen.findByRole('link', { name: /Quail and Millet/ }))
+
+    const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb trail' })
+    expect(await screen.findByRole('heading', { name: 'Quail and Millet' })).toBeTruthy()
+    expect(within(breadcrumb).getByRole('link', { name: 'All objects' }).getAttribute('href'))
+      .toBe('/collection?q=quail')
   })
 
   it('opens the mobile navigation and submits a search to All objects', async () => {

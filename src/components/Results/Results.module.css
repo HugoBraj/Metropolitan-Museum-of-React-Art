@@ -1,0 +1,106 @@
+.resultsToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.resultCount {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.sortControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+}
+
+.sortControl select {
+  width: auto;
+  min-height: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3rem;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.sortControl select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.artworkGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+}
+
+.statusMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.filterNotice {
+  margin: 0 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.clearButton {
+  min-height: 2.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+}
+
+.clearButton:hover:not(:disabled),
+.clearButton:focus-visible:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.clearButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 900px) {
+  .artworkGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .resultsToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .artworkGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 0.75rem;
+  }
+}

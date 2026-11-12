@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
 import { Loader } from '../../components/Loader/Loader'
+import { Results } from '../../components/Results/Results'
 import { useDepartments } from '../../hooks/useDepartments'
 import styles from './DepartmentsPage.module.css'
 
@@ -26,14 +28,25 @@ const DEFAULT_DEPARTMENT_IMAGE = '/bg_home_buttons/by-departments.png'
 
 export function DepartmentsPage() {
   const departmentsQuery = useDepartments()
+  const [searchParams] = useSearchParams()
+  const selectedDepartmentId = Number(searchParams.get('departmentId'))
+  const selectedDepartment = Number.isInteger(selectedDepartmentId)
+    ? departmentsQuery.data?.find((department) => department.departmentId === selectedDepartmentId)
+    : undefined
+  const hasDepartmentSelection = searchParams.has('departmentId')
 
   return (
     <main className={styles.departmentsPage}>
+      {selectedDepartment && (
+        <Breadcrumbs current={selectedDepartment.displayName} items={[{ label: 'By department', to: '/departments' }]} />
+      )}
       <header className={styles.pageHeader}>
         <p className={styles.eyebrow}>Explore the collection</p>
-        <h1 className={styles.pageTitle}>By department</h1>
+        <h1 className={styles.pageTitle}>{selectedDepartment?.displayName ?? 'By department'}</h1>
         <p className={styles.pageDescription}>
-          Explore works through the museum departments that care for them.
+          {selectedDepartment
+            ? `Browse objects from the ${selectedDepartment.displayName} department.`
+            : 'Explore works through the museum departments that care for them.'}
         </p>
       </header>
 
@@ -43,10 +56,22 @@ export function DepartmentsPage() {
           Departments could not be loaded. Please try again later.
         </p>
       )}
-      {departmentsQuery.isSuccess && departmentsQuery.data.length === 0 && (
+      {departmentsQuery.isSuccess && hasDepartmentSelection && !selectedDepartment && (
+        <p className={styles.statusMessage}>Department not found.</p>
+      )}
+      {departmentsQuery.isSuccess && selectedDepartment && (
+        <Results
+          breadcrumbItems={[
+            { label: 'By department', to: '/departments' },
+            { label: selectedDepartment.displayName, to: `/departments?departmentId=${selectedDepartment.departmentId}` },
+          ]}
+          criteria={{ departmentId: selectedDepartment.departmentId }}
+        />
+      )}
+      {departmentsQuery.isSuccess && !hasDepartmentSelection && departmentsQuery.data.length === 0 && (
         <p className={styles.statusMessage}>No departments are available.</p>
       )}
-      {departmentsQuery.isSuccess && departmentsQuery.data.length > 0 && (
+      {departmentsQuery.isSuccess && !hasDepartmentSelection && departmentsQuery.data.length > 0 && (
         <nav aria-label="Museum departments" className={styles.departmentGrid}>
           {departmentsQuery.data.map((department) => (
             <Link
@@ -56,7 +81,7 @@ export function DepartmentsPage() {
               style={{
                 backgroundImage: `linear-gradient(180deg, var(--color-preview-overlay-light) 15%, var(--color-preview-overlay-strong) 100%), url("${DEPARTMENT_IMAGES[department.departmentId] ?? DEFAULT_DEPARTMENT_IMAGE}")`,
               }}
-              to={`/collection?departmentId=${department.departmentId}`}
+              to={`/departments?departmentId=${department.departmentId}`}
             >
               <span className={styles.departmentLabel}>{department.displayName}</span>
               <span aria-hidden="true" className={styles.departmentArrow}>→</span>

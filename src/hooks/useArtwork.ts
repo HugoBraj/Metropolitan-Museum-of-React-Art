@@ -12,5 +12,6 @@ export function useArtwork(objectID: number | undefined) {
       return getObjectById(objectID, signal)
     },
     enabled: Number.isInteger(objectID) && (objectID ?? 0) > 0,
+    staleTime: 5 * 60 * 1000,
   })
 }
