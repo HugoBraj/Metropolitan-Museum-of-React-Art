@@ -103,6 +103,12 @@ export function Results({ criteria, regionSlug, breadcrumbItems }: ResultsProps)
             <p className={styles.filterNotice}>Only the first 10,000 matches are available through the search API. Refine your filters to explore further.</p>
           )}
 
+          {artworksQuery.data.failedGeoLocations && artworksQuery.data.failedGeoLocations.length > 0 && (
+            <p className={styles.filterNotice} role="status">
+              Some geographic searches were unavailable, so results may be incomplete: {artworksQuery.data.failedGeoLocations.join(', ')}.
+            </p>
+          )}
+
           {artworks.length > 0 && (
             <div className={styles.artworkGrid}>
               {artworks.map((artwork) => (

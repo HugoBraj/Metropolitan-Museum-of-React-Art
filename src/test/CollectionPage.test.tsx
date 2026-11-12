@@ -5,10 +5,10 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CollectionPage } from '../pages/CollectionPage/CollectionPage'
 
-function createResponse(body: unknown): Response {
+function createResponse(body: unknown, status = 200): Response {
   return {
-    ok: true,
-    status: 200,
+    ok: status >= 200 && status < 300,
+    status,
     json: async () => body,
   } as Response
 }
@@ -128,5 +128,28 @@ describe('CollectionPage', () => {
     expect(locations).toContain('Canada')
     expect(locations).not.toContain('North America')
     expect(fetchMock).toHaveBeenCalledTimes(9)
+  })
+
+  it('keeps results from available locations when one geographic search is forbidden', async () => {
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/departments')) {
+        return createResponse({ departments: [] })
+      }
+      if (url.pathname.endsWith('/search')) {
+        if (url.searchParams.get('geoLocation') === 'Guatemala') {
+          return createResponse({}, 403)
+        }
+        return createResponse({ total: 1, objectIDs: [1002] })
+      }
+      return createResponse({ objectID: 1002, title: 'Available regional artwork' })
+    })
+    render(<CollectionPage />, { wrapper: createWrapper('/collection?region=north-america') })
+
+    expect(await screen.findByRole('link', { name: /Available regional artwork/ })).toBeTruthy()
+    expect((await screen.findByRole('status')).textContent).toContain('Guatemala')
+    expect(fetchMock.mock.calls.filter(([input]) =>
+      new URL(String(input)).pathname.endsWith('/search'),
+    )).toHaveLength(6)
   })
 })
