@@ -11,7 +11,9 @@ export function AppLayout() {
   return (
     <div className={styles.appLayout}>
       <NavigationBar onSearchTermChange={setSearchTerm} searchResults={searchResults} searchTerm={searchTerm} />
-      <Outlet />
+      <div className={styles.pageScroll}>
+        <Outlet />
+      </div>
     </div>
   )
 }

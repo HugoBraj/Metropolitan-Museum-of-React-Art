@@ -1,6 +1,6 @@
 .departmentsPage {
   width: min(100% - 3rem, var(--content-width));
-  min-height: calc(100vh - 3.25rem);
+  min-height: 100%;
   margin-inline: auto;
   padding-block: 2rem 3rem;
 }

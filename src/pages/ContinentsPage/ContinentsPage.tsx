@@ -24,7 +24,6 @@ export function ContinentsPage() {
       <header className={styles.pageHeader}>
         <p className={styles.eyebrow}>Explore the collection</p>
         <h1 className={styles.pageTitle}>{region?.label ?? 'By continent'}</h1>
-        {/* <p>{region ? `Browse artworks connected to ${region.label}.` : 'Select a continent to browse artworks connected to that region.'}</p> */}
       </header>
       {region ? (
         <Results
