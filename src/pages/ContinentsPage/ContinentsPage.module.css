@@ -1,7 +1,7 @@
 .continentsPage {
   display: flex;
   width: min(100% - 3rem, var(--content-width));
-  height: calc(100dvh - 3.25rem);
+  height: 100%;
   margin-inline: auto;
   min-height: 24rem;
   flex-direction: column;
@@ -45,7 +45,7 @@
 
 @media (max-width: 680px) {
   .continentsPage {
-    height: calc(100dvh - 3.5rem);
+    height: 100%;
     min-height: 22rem;
     padding: 1rem 1rem 1.25rem;
   }

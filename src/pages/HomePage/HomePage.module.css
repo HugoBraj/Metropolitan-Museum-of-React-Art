@@ -1,6 +1,6 @@
 .homePage {
   display: flex;
-  min-height: calc(100vh - 3.25rem);
+  min-height: 100%;
   flex-direction: column;
 }
 
