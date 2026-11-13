@@ -41,7 +41,7 @@ The test suite covers the shared loader, home and not-found routes, department a
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
 - `src/components/Loader` provides a shared accessible animated loading indicator, with a compact variant for the map tooltip.
 - `src/pages/HomePage` renders an introduction and three responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the interactive map, then displays selected-continent results in place.
-- `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters, passing criteria to the shared results view. Date sorting applies to the current page.
+- `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters, passing criteria to the shared results view. Highlights are enabled by default and can be turned off. Date sorting applies to the current page.
 - `src/pages/DepartmentsPage` loads the official museum departments and displays the selected department's results in place. `src/pages/RegionCollectionPage` uses the shared results view for region routes. `src/pages/StatisticsPage` remains a route placeholder.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.

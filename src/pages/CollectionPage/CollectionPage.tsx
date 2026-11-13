@@ -32,7 +32,7 @@ function getSearchFilters(searchParams: URLSearchParams): SearchObjectsParams {
     dateBegin: dateBegin !== undefined && dateEnd !== undefined ? dateBegin : undefined,
     dateEnd: dateBegin !== undefined && dateEnd !== undefined ? dateEnd : undefined,
     artistOrCulture: searchParams.get('artistOrCulture') === 'true' || undefined,
-    isHighlight: searchParams.get('isHighlight') === 'true' || undefined,
+    isHighlight: searchParams.get('isHighlight') !== 'false',
     isOnView: searchParams.get('isOnView') === 'true' || undefined,
     hasImages: searchParams.get('hasImages') === 'true' || undefined,
   }
@@ -89,11 +89,12 @@ export function CollectionPage() {
       nextSearchParams.set('dateEnd', dateEnd)
     }
 
-    for (const name of ['artistOrCulture', 'isHighlight', 'isOnView', 'hasImages']) {
+    for (const name of ['artistOrCulture', 'isOnView', 'hasImages']) {
       if (formData.get(name) === 'on') {
         nextSearchParams.set(name, 'true')
       }
     }
+    nextSearchParams.set('isHighlight', String(formData.get('isHighlight') === 'on'))
 
     nextSearchParams.set('sort', sortOrder)
     setFilterError('')
@@ -102,7 +103,7 @@ export function CollectionPage() {
 
   function clearFilters() {
     setFilterError('')
-    setSearchParams(new URLSearchParams({ sort: 'date-desc' }))
+    setSearchParams(new URLSearchParams({ sort: 'date-desc', isHighlight: 'true' }))
   }
 
   return (
@@ -166,7 +167,7 @@ export function CollectionPage() {
             <fieldset className={styles.checkboxFilters}>
               <legend>Object attributes</legend>
               <label><input defaultChecked={searchParams.get('artistOrCulture') === 'true'} name="artistOrCulture" type="checkbox" /> Search artist or culture</label>
-              <label><input defaultChecked={searchParams.get('isHighlight') === 'true'} name="isHighlight" type="checkbox" /> Highlights</label>
+              <label><input defaultChecked={searchParams.get('isHighlight') !== 'false'} name="isHighlight" type="checkbox" /> Highlights</label>
               <label><input defaultChecked={searchParams.get('isOnView') === 'true'} name="isOnView" type="checkbox" /> Currently on view</label>
               <label><input defaultChecked={searchParams.get('hasImages') === 'true'} name="hasImages" type="checkbox" /> Has an image</label>
             </fieldset>

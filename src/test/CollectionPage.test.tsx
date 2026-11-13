@@ -61,13 +61,13 @@ describe('CollectionPage', () => {
     await screen.findByRole('link', { name: /Newer vessel/ })
 
     fireEvent.click(screen.getByText('Filters'))
+    expect((screen.getByLabelText('Highlights') as HTMLInputElement).checked).toBe(true)
     fireEvent.change(screen.getByLabelText('Search all objects'), { target: { value: 'vessel' } })
     fireEvent.change(screen.getByLabelText('Department'), { target: { value: '6' } })
     fireEvent.change(screen.getByLabelText('Medium or object type'), { target: { value: 'Ceramics' } })
     fireEvent.change(screen.getByLabelText('Place of origin'), { target: { value: 'Japan' } })
     fireEvent.change(screen.getByLabelText('Created from'), { target: { value: '1000' } })
     fireEvent.change(screen.getByLabelText('Created to'), { target: { value: '1900' } })
-    fireEvent.click(screen.getByLabelText('Highlights'))
     fireEvent.click(screen.getByLabelText('Has an image'))
     fireEvent.click(screen.getByRole('button', { name: 'Search collection' }))
 
@@ -99,6 +99,22 @@ describe('CollectionPage', () => {
       link.getAttribute('href')?.startsWith('/objects/'),
     )
     expect(artworkLinks[0].getAttribute('href')).toBe('/objects/1001')
+  })
+
+  it('lets visitors turn off the default highlights filter', async () => {
+    render(<CollectionPage />, { wrapper: createWrapper() })
+
+    await screen.findByRole('link', { name: /Newer vessel/ })
+    fireEvent.click(screen.getByText('Filters'))
+    fireEvent.click(screen.getByLabelText('Highlights'))
+    fireEvent.click(screen.getByRole('button', { name: 'Search collection' }))
+
+    await waitFor(() => {
+      const searchCalls = fetchMock.mock.calls.filter(([input]) =>
+        new URL(String(input)).pathname.endsWith('/search'),
+      )
+      expect(new URL(String(searchCalls.at(-1)?.[0])).searchParams.get('isHighlight')).toBe('false')
+    })
   })
 
   it('requires both creation years when either date bound is entered', async () => {
