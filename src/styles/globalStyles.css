@@ -23,6 +23,8 @@
   --shadow-navigation: -0.5rem 0 1.5rem rgb(36 35 33 / 12%);
   --font-sans: 'DM Sans', 'Segoe UI', sans-serif;
   --font-display: 'Manrope', 'DM Sans', 'Segoe UI', sans-serif;
+  --font-size-discovery-title: 2.35rem;
+  --font-size-discovery-title-mobile: 1.9rem;
   --content-width: 82rem;
   --card-radius: 0.5rem;
 
@@ -33,6 +35,12 @@
   line-height: 1.45;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-discovery-title: var(--font-size-discovery-title-mobile);
+  }
 }
 
 *,
