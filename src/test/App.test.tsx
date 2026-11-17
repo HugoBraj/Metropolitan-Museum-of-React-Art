@@ -126,6 +126,14 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'Page not found' })).toBeTruthy()
   })
 
+  it('keeps the return link for an unknown continent', () => {
+    window.history.replaceState(null, '', '/collection/unknown')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'Continent not found' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Return to the world map' })).toBeTruthy()
+  })
+
   it.each(['/search', '/chronology'])('renders not found for the removed route %s', (route) => {
     window.history.replaceState(null, '', route)
     render(<App />)

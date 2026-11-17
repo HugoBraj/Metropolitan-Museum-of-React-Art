@@ -12,7 +12,7 @@ export function RegionCollectionPage() {
     return (
       <main className={styles.regionPage}>
         <h1 className={styles.pageTitle}>Continent not found</h1>
-        <Link className={styles.backLink} to="/">Return to the world map</Link>
+        <Link to="/">Return to the world map</Link>
       </main>
     )
   }

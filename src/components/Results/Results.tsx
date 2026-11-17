@@ -74,7 +74,7 @@ export function Results({ criteria, regionSlug, breadcrumbItems }: ResultsProps)
   }
 
   return (
-    <section aria-label="Collection results" className={styles.resultsSection}>
+    <section aria-label="Collection results">
       {artworksQuery.isPending && <ResultsSkeleton count={COLLECTION_PAGE_SIZE} gridClassName={styles.artworkGrid} />}
       {artworksQuery.isError && (
         <div aria-live="polite" className={styles.statusMessage}>

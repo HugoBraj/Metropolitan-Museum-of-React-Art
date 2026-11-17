@@ -9,14 +9,6 @@
   margin-bottom: 1.25rem;
 }
 
-.eyebrow {
-  margin: 0 0 0.35rem;
-  color: var(--color-accent);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
 .pageTitle {
   margin: 0 0 0.35rem;
   font-family: var(--font-display);
@@ -57,8 +49,7 @@
 
 .queryInput:focus-visible,
 .filterField input:focus-visible,
-.filterField select:focus-visible,
-.sortControl select:focus-visible {
+.filterField select:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 1px;
 }
@@ -119,8 +110,7 @@
 }
 
 .filterField input,
-.filterField select,
-.sortControl select {
+.filterField select {
   width: 100%;
   min-width: 0;
   min-height: 2.25rem;

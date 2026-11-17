@@ -46,7 +46,7 @@ The test suite covers skeleton loading states, home and not-found routes, depart
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search, department-list, and object-detail requests.
-- `src/hooks/useArtworkSearch.ts` and `src/hooks/useArtwork.ts` provide cached search and object-detail queries.
+- `src/hooks/useArtwork.ts` provides cached object-detail queries.
 - `src/hooks/useArtworkSuggestions.ts` debounces navigation searches by 300 ms after two characters and loads at most eight object details.
 - `src/hooks/useDepartments.ts` caches department options; `src/hooks/useCollectionArtworks.ts` pages search IDs and hydrates a bounded set of object records.
 - `src/data/creationDateStatistics.ts` stores the precomputed chart totals and the source snapshot.

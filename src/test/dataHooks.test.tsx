@@ -3,7 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react'
 import type { PropsWithChildren } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useArtwork } from '../hooks/useArtwork'
-import { useArtworkSearch } from '../hooks/useArtworkSearch'
 import { useArtworkSuggestions } from '../hooks/useArtworkSuggestions'
 import { useCollectionArtworks } from '../hooks/useCollectionArtworks'
 import { useDepartments } from '../hooks/useDepartments'
@@ -36,19 +35,6 @@ describe('collection data hooks', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals()
-  })
-
-  it('fetches a paginated search through the query hook', async () => {
-    fetchMock.mockResolvedValue(createResponse({ total: 1, objectIDs: [45734] }))
-
-    const { result } = renderHook(() => useArtworkSearch({ q: 'quail', limit: 5 }), {
-      wrapper: createQueryWrapper(),
-    })
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    expect(result.current.data).toEqual({ total: 1, objectIDs: [45734] })
-    expect(fetchMock).toHaveBeenCalledOnce()
   })
 
   it('debounces suggestion searches and fetches at most eight object details', async () => {
