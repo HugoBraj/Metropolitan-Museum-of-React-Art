@@ -33,7 +33,7 @@ The test suite covers skeleton loading states, home and not-found routes, depart
 ## Current structure
 
 - `src/App.tsx` defines the routes and router.
-- `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`.
+- `src/components/AppLayout` renders the shared navigation and the active route through `Outlet`, followed by the shared footer inside the scrolling content area.
 - `src/components/NavigationBar` contains responsive navigation and artwork search: submit to All objects or select a suggestion to open its detail page.
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible, with cached per-continent result counts.
 - `src/components/Results` fetches and displays paginated, sortable artwork results for supplied search criteria; `src/components/Breadcrumbs` renders the path back to a parent view.

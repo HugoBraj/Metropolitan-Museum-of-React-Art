@@ -7,8 +7,30 @@
 }
 
 .pageScroll {
+  display: flex;
   min-height: 0;
+  flex-direction: column;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  scrollbar-gutter: stable;
+}
+
+.pageScroll > main {
+  flex: 1 0 auto;
+}
+
+.pageFooter {
+  display: flex;
+  min-height: 2.7rem;
+  flex-shrink: 0;
+  align-items: center;
+  background-color: var(--color-text);
+  color: var(--color-surface);
+  padding: 0.6rem max(1.5rem, calc((100vw - var(--content-width)) / 2));
+  font-size: 0.65rem;
+}
+
+@media (max-width: 520px) {
+  .pageFooter {
+    padding-inline: 1rem;
+  }
 }

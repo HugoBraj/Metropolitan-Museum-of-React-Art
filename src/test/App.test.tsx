@@ -35,6 +35,16 @@ describe('application routes', () => {
     expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeTruthy()
   })
 
+  it.each(['/', '/statistics', '/unknown'])('renders one shared footer after the page on %s', (route) => {
+    window.history.replaceState(null, '', route)
+    render(<App />)
+
+    const footer = screen.getByRole('contentinfo')
+    expect(footer.textContent).toContain('Collection data from The Metropolitan Museum of Art.')
+    expect(footer.previousElementSibling).toBe(screen.getByRole('main'))
+    expect(screen.getAllByRole('contentinfo')).toHaveLength(1)
+  })
+
   it('opens the dedicated continent map from the home page and navbar', () => {
     const homeView = render(<App />)
 

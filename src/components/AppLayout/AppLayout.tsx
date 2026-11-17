@@ -13,6 +13,9 @@ export function AppLayout() {
       <NavigationBar onSearchTermChange={setSearchTerm} searchResults={searchResults} searchTerm={searchTerm} />
       <div className={styles.pageScroll}>
         <Outlet />
+        <footer className={styles.pageFooter}>
+          <span>Collection data from The Metropolitan Museum of Art.</span>
+        </footer>
       </div>
     </div>
   )

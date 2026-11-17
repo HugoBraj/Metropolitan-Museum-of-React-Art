@@ -1,11 +1,14 @@
 .continentsPage {
   display: flex;
   width: min(100% - 3rem, var(--content-width));
-  height: 100%;
   margin-inline: auto;
   min-height: 24rem;
   flex-direction: column;
   padding-block: 2rem 3rem;
+}
+
+.mapPage {
+  height: 100%;
 }
 
 .pageHeader {

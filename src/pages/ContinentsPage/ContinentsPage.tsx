@@ -17,7 +17,7 @@ export function ContinentsPage() {
   }
 
   return (
-    <main className={styles.continentsPage}>
+    <main className={region ? styles.continentsPage : `${styles.continentsPage} ${styles.mapPage}`}>
       {region && (
         <Breadcrumbs current={region.label} items={[{ label: 'By continent', to: '/continents' }]} />
       )}

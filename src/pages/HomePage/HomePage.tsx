@@ -60,9 +60,6 @@ export function HomePage() {
           ))}
         </nav>
       </section>
-      <footer className={styles.pageFooter}>
-        <span>Collection data from The Metropolitan Museum of Art.</span>
-      </footer>
     </main>
   )
 }
