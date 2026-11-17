@@ -3,7 +3,7 @@ import type { FormEvent } from 'react'
 import { Menu, Search, X } from 'lucide-react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import type { MetObject } from '../../api/metMuseumClient'
-import { Loader } from '../Loader/Loader'
+import { SuggestionsSkeleton } from '../LoadingSkeleton/LoadingSkeleton'
 import styles from './NavigationBar.module.css'
 
 interface NavigationBarProps {
@@ -207,12 +207,12 @@ export function NavigationBar({ searchTerm, onSearchTermChange, searchResults }:
 
           {searchTerm.trim().length >= 2 && (
             <section aria-label="Artwork suggestions" className={styles.suggestions}>
-              {searchResults.isLoading && <Loader size="compact" text="Loading suggestions..." />}
+              {searchResults.isLoading && <SuggestionsSkeleton />}
               {searchResults.isError && <p className={styles.suggestionStatus} role="status">Some suggestions could not be loaded.</p>}
               {searchResults.isReady && !searchResults.isError && searchResults.suggestions.length === 0 && (
                 <p className={styles.suggestionStatus} role="status">No artworks found.</p>
               )}
-              {searchResults.suggestions.length > 0 && (
+              {!searchResults.isLoading && searchResults.suggestions.length > 0 && (
                 <ul className={styles.suggestionList}>
                   {searchResults.suggestions.map((artwork) => (
                     <li key={artwork.objectID}>

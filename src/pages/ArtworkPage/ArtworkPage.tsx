@@ -1,7 +1,7 @@
 import { useLocation, useParams } from 'react-router-dom'
 import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
 import type { BreadcrumbItem } from '../../components/Breadcrumbs/Breadcrumbs'
-import { Loader } from '../../components/Loader/Loader'
+import { ArtworkSkeleton } from '../../components/LoadingSkeleton/LoadingSkeleton'
 import { useArtwork } from '../../hooks/useArtwork'
 import { useArtworkImage } from '../../hooks/useArtworkImage'
 import styles from './ArtworkPage.module.css'
@@ -33,7 +33,7 @@ export function ArtworkPage() {
   if (artworkQuery.isLoading) {
     return (
       <main className={styles.page}>
-        <Loader text="Loading artwork..." />
+        <ArtworkSkeleton />
       </main>
     )
   }

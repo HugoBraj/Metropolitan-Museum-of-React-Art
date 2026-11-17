@@ -54,6 +54,40 @@ describe('CollectionPage', () => {
     vi.unstubAllGlobals()
   })
 
+  it('shows a skeleton grid while artwork results are loading', () => {
+    fetchMock.mockImplementation(() => new Promise<Response>(() => {}))
+    render(<CollectionPage />, { wrapper: createWrapper() })
+
+    const loadingStatus = screen.getByRole('status', { name: 'Loading artworks' })
+    const grid = loadingStatus.querySelector('[aria-hidden="true"]')
+    expect(grid?.children).toHaveLength(12)
+    expect(screen.queryByText('No objects found')).toBeNull()
+  })
+
+  it('replaces the skeleton grid with artwork results after loading', async () => {
+    let resolveSearch: (response: Response) => void = () => {}
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(String(input))
+      if (url.pathname.endsWith('/departments')) {
+        return createResponse({ departments: [] })
+      }
+      if (url.pathname.endsWith('/search')) {
+        return new Promise<Response>((resolve) => { resolveSearch = resolve })
+      }
+      return createResponse({ objectID: 1001, title: 'Loaded artwork' })
+    })
+    render(<CollectionPage />, { wrapper: createWrapper() })
+
+    expect(screen.getByRole('status', { name: 'Loading artworks' })).toBeTruthy()
+    await waitFor(() => expect(fetchMock.mock.calls.some(([input]) =>
+      new URL(String(input)).pathname.endsWith('/search'),
+    )).toBe(true))
+    resolveSearch(createResponse({ total: 1, objectIDs: [1001] }))
+
+    expect(await screen.findByRole('link', { name: /Loaded artwork/ })).toBeTruthy()
+    expect(screen.queryByRole('status', { name: 'Loading artworks' })).toBeNull()
+  })
+
   it('searches with selected filters and sorts the visible page by date', async () => {
     render(<CollectionPage />, { wrapper: createWrapper() })
 

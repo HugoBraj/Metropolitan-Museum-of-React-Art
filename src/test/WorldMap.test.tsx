@@ -34,6 +34,15 @@ describe('WorldMap', () => {
     expect(screen.getByRole('tooltip').textContent).toContain('427 artworks')
   })
 
+  it('shows a skeleton for a loading artwork count', () => {
+    render(<WorldMap isRegionCountLoading onSelectRegion={vi.fn()} />)
+
+    fireEvent.mouseOver(screen.getByRole('link', { name: 'Browse Africa artworks' }))
+
+    const tooltip = screen.getByRole('tooltip')
+    expect(within(tooltip).getByRole('status', { name: 'Loading artwork count' })).toBeTruthy()
+  })
+
   it('shows continent results in place and keeps the continent breadcrumb on an artwork', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))

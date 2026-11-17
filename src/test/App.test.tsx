@@ -65,6 +65,23 @@ describe('application routes', () => {
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
+  it('shows department tile skeletons while departments load', () => {
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => {})))
+    window.history.replaceState(null, '', '/departments')
+    render(<App />)
+
+    const loadingStatus = screen.getByRole('status', { name: 'Loading departments' })
+    expect(loadingStatus.querySelector('[aria-hidden="true"]')?.children).toHaveLength(8)
+  })
+
+  it('shows an artwork detail skeleton while the object loads', () => {
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => {})))
+    window.history.replaceState(null, '', '/objects/9876999')
+    render(<App />)
+
+    expect(screen.getByRole('status', { name: 'Loading artwork' }).querySelector('[aria-hidden="true"]')).not.toBeNull()
+  })
+
   it('shows department results in place and keeps the department breadcrumb on an artwork', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
@@ -317,6 +334,19 @@ describe('application routes', () => {
     fireEvent.click(collectionLink)
     expect(screen.queryByRole('searchbox', { name: 'Search artworks' })).toBeNull()
     expect(window.location.pathname).toBe('/collection')
+  })
+
+  it('shows suggestion skeletons while searching', () => {
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => {})))
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open search' }))
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search artworks' }), {
+      target: { value: 'moon' },
+    })
+
+    const loadingStatus = screen.getByRole('status', { name: 'Loading suggestions' })
+    expect(loadingStatus.querySelector('[aria-hidden="true"]')?.children).toHaveLength(3)
   })
 
   it('shows suggestions, clears the input, and opens an artwork', async () => {

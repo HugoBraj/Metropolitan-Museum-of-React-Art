@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the shared loader, home and not-found routes, department and continent results, artwork breadcrumbs, discovery-link descriptions, collection filters and sorting, navigation search, statistics, the Met API client, and its React Query hooks.
+The test suite covers skeleton loading states, home and not-found routes, department and continent results, artwork breadcrumbs, discovery-link descriptions, collection filters and sorting, navigation search, statistics, the Met API client, and its React Query hooks.
 
 ## Current structure
 
@@ -39,7 +39,7 @@ The test suite covers the shared loader, home and not-found routes, department a
 - `src/components/Results` fetches and displays paginated, sortable artwork results for supplied search criteria; `src/components/Breadcrumbs` renders the path back to a parent view.
 - `src/components/CreationDateChart` displays the precomputed creation-date counts.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
-- `src/components/Loader` provides a shared accessible animated loading indicator, with a compact variant for the map tooltip.
+- `src/components/LoadingSkeleton` provides accessible loading placeholders for artwork grids, suggestions, departments, artwork details, and map counts.
 - `src/pages/HomePage` renders an introduction and three responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the interactive map, then displays selected-continent results in place.
 - `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters, passing criteria to the shared results view. Highlights are enabled by default and can be turned off. Date sorting applies to the current page.
 - `src/pages/DepartmentsPage` loads the official museum departments and displays the selected department's results in place. `src/pages/RegionCollectionPage` uses the shared results view for region routes. `src/pages/StatisticsPage` displays the static creation-date chart.

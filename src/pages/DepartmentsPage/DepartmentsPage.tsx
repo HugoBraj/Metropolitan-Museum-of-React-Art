@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { Breadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs'
-import { Loader } from '../../components/Loader/Loader'
+import { DepartmentsSkeleton } from '../../components/LoadingSkeleton/LoadingSkeleton'
 import { Results } from '../../components/Results/Results'
 import { useDepartments } from '../../hooks/useDepartments'
 import styles from './DepartmentsPage.module.css'
@@ -50,7 +50,7 @@ export function DepartmentsPage() {
         </p>
       </header>
 
-      {departmentsQuery.isPending && <Loader text="Loading departments..." />}
+      {departmentsQuery.isPending && <DepartmentsSkeleton gridClassName={styles.departmentGrid} />}
       {departmentsQuery.isError && (
         <p aria-live="polite" className={styles.statusMessage}>
           Departments could not be loaded. Please try again later.

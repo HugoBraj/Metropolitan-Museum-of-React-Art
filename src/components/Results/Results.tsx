@@ -6,7 +6,7 @@ import type { ArtworkRegionSlug } from '../../constants/artworkRegions'
 import { findArtworkRegion } from '../../constants/artworkRegions'
 import { COLLECTION_PAGE_SIZE, useCollectionArtworks } from '../../hooks/useCollectionArtworks'
 import { ArtworkCard } from '../ArtworkCard/ArtworkCard'
-import { Loader } from '../Loader/Loader'
+import { ResultsSkeleton } from '../LoadingSkeleton/LoadingSkeleton'
 import styles from './Results.module.css'
 
 type SortOrder = 'date-asc' | 'date-desc'
@@ -75,7 +75,7 @@ export function Results({ criteria, regionSlug, breadcrumbItems }: ResultsProps)
 
   return (
     <section aria-label="Collection results" className={styles.resultsSection}>
-      {artworksQuery.isPending && <Loader text="Loading artworks..." />}
+      {artworksQuery.isPending && <ResultsSkeleton count={COLLECTION_PAGE_SIZE} gridClassName={styles.artworkGrid} />}
       {artworksQuery.isError && (
         <div aria-live="polite" className={styles.statusMessage}>
           <p>Artworks could not be loaded.</p>
