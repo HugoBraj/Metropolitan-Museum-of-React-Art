@@ -135,4 +135,5 @@ describe('collection data hooks', () => {
     })
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
+
 })

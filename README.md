@@ -1,6 +1,6 @@
 # Metropolitan Museum of React Art
 
-A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with three image-backed links for departments, continents, and statistics. The dedicated continent map shows artwork counts on hover and keeps selected-continent results on the same page. Department selections work the same way, and artwork details include breadcrumbs back to their originating results. Navigation search offers artwork suggestions; charts are still planned.
+A React and TypeScript app for exploring The Metropolitan Museum of Art collection. The home page pairs a short introduction and a primary exploration link with three image-backed links for departments, continents, and statistics. The dedicated continent map shows artwork counts on hover and keeps selected-continent results on the same page. Department selections work the same way, and artwork details include breadcrumbs back to their originating results. Navigation search offers artwork suggestions; statistics show creation dates from a fixed snapshot of the Met's Open Access dataset.
 
 ## Requirements
 
@@ -28,7 +28,7 @@ pnpm lint     # Run ESLint
 pnpm test     # Run the Vitest suite
 ```
 
-The test suite covers the shared loader, home and not-found routes, department and continent results, artwork breadcrumbs, discovery-link descriptions, collection filters and sorting, navigation search, the Met API client, and its React Query hooks.
+The test suite covers the shared loader, home and not-found routes, department and continent results, artwork breadcrumbs, discovery-link descriptions, collection filters and sorting, navigation search, statistics, the Met API client, and its React Query hooks.
 
 ## Current structure
 
@@ -37,26 +37,25 @@ The test suite covers the shared loader, home and not-found routes, department a
 - `src/components/NavigationBar` contains responsive navigation and artwork search: submit to All objects or select a suggestion to open its detail page.
 - `src/components/WorldMap` makes the supplied continent SVG keyboard- and pointer-accessible, with cached per-continent result counts.
 - `src/components/Results` fetches and displays paginated, sortable artwork results for supplied search criteria; `src/components/Breadcrumbs` renders the path back to a parent view.
-- `src/components/RoutePlaceholder` renders the statistics placeholder page.
+- `src/components/CreationDateChart` displays the precomputed creation-date counts.
 - `src/components/ArtworkCard` displays a collection result with image and metadata fallbacks.
 - `src/components/Loader` provides a shared accessible animated loading indicator, with a compact variant for the map tooltip.
 - `src/pages/HomePage` renders an introduction and three responsive image-backed discovery links; descriptions reveal on hover/focus and remain visible on touch devices. `src/pages/ContinentsPage` renders the interactive map, then displays selected-continent results in place.
 - `src/pages/CollectionPage` provides text search, department, medium, location, creation-date, artist/culture, highlight, on-view, and image filters, passing criteria to the shared results view. Highlights are enabled by default and can be turned off. Date sorting applies to the current page.
-- `src/pages/DepartmentsPage` loads the official museum departments and displays the selected department's results in place. `src/pages/RegionCollectionPage` uses the shared results view for region routes. `src/pages/StatisticsPage` remains a route placeholder.
+- `src/pages/DepartmentsPage` loads the official museum departments and displays the selected department's results in place. `src/pages/RegionCollectionPage` uses the shared results view for region routes. `src/pages/StatisticsPage` displays the static creation-date chart.
 - `src/pages/NotFoundPage` handles unmatched routes.
 - `src/styles/globalStyles.css` defines global styles and CSS variables; components and pages use CSS Modules.
 - `src/api/metMuseumClient.ts` provides typed search, department-list, and object-detail requests.
 - `src/hooks/useArtworkSearch.ts` and `src/hooks/useArtwork.ts` provide cached search and object-detail queries.
 - `src/hooks/useArtworkSuggestions.ts` debounces navigation searches by 300 ms after two characters and loads at most eight object details.
 - `src/hooks/useDepartments.ts` caches department options; `src/hooks/useCollectionArtworks.ts` pages search IDs and hydrates a bounded set of object records.
+- `src/data/creationDateStatistics.ts` stores the precomputed chart totals and the source snapshot.
 - `src/constants/artworkRegions.ts` maps map-path IDs and route slugs to API geographic terms.
 - `src/test` contains route, API client, query-hook, and continent-browsing tests.
 
-## Planned features
+The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. Collection and continent views hydrate at most 12 object details at a time; North America uses country-level geographic searches because the API returns no results for its broad continent name. A failed country search does not discard successful regional results; the view marks them as incomplete. Continent counts are queried and cached only while the map is displayed. Creation-date sorting currently applies to the loaded result page, not the entire API result set.
 
-- Add a chart based on a bounded sample of returned collection objects.
-
-The API client uses paginated `/public/collection/v1.1/search` rather than the deprecated `/v1/search` endpoint. Search returns object IDs, while object details are fetched separately. Requests are bounded: page size is at most 500, and the search offset plus limit cannot exceed 10,000. Collection and continent views hydrate at most 12 object details at a time; North America uses country-level geographic searches because the API returns no results for its broad continent name. A failed country search does not discard successful regional results; the view marks them as incomplete. Continent counts are queried and cached only while the map is displayed. Creation-date sorting currently applies to the loaded result page, not the entire API result set. The API does not provide aggregation, so future chart values will be calculated client-side from a documented sample.
+Statistics make no API requests. Their static counts were aggregated from all 503,378 records in the Met's [Open Access CSV snapshot from November 16, 2026](https://github.com/metmuseum/openaccess/blob/15d35b4b1f7f87baa8d42cc24481f68f76817d20/MetObjects.csv). Each record is grouped by `Object Begin Date`, or `Object End Date` if the begin year is absent. The 1,105 records whose begin and end years are both zero are excluded, leaving 502,273 dated records. Years can be approximate, and the dataset is not a complete record of the museum's collection. The snapshot and counts do not update automatically.
 
 ## Visual system
 

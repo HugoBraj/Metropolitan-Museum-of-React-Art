@@ -51,6 +51,20 @@ describe('application routes', () => {
     expect(screen.getByRole('heading', { name: 'By continent' })).toBeTruthy()
   })
 
+  it('opens the statistics chart from the home page', () => {
+    const fetchMock = vi.fn<typeof fetch>()
+    vi.stubGlobal('fetch', fetchMock)
+    render(<App />)
+
+    const discoveryNavigation = screen.getByRole('navigation', { name: 'Explore the collection' })
+    fireEvent.click(within(discoveryNavigation).getByRole('link', { name: 'See statistics' }))
+
+    expect(screen.getByRole('heading', { name: 'Statistics' })).toBeTruthy()
+    expect(screen.getByRole('list', { name: 'Number of objects by creation period' })).toBeTruthy()
+    expect(window.location.pathname).toBe('/statistics')
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('shows department results in place and keeps the department breadcrumb on an artwork', async () => {
     const fetchMock = vi.fn<typeof fetch>(async (input) => {
       const url = new URL(String(input))
